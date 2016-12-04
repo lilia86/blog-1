@@ -1,0 +1,49 @@
+{% extends 'AppBundle::main.html.twig' %}
+
+
+    {% block body %}
+        <!--about-starts-->
+        <div class="about">
+            <div class="container">
+                <div class="about-main">
+                    <div class="about-btn">
+                        <a href="{{ path('post_form') }}">Add new post</a>
+                    </div>
+                    <div class="col-md-8 about-left">
+                        {% for blog in blogs %}
+                        <div class="about-one">
+                            <p>Find The Most</p>
+                            <h3>{{ blog.title }}</h3>
+                        </div>
+                        <div class="about-two">
+                            <a href="#"><img src="{{ asset(['images/', blog.image]|join) }}" alt="" /></a>
+                            <p>Posted by <a href="#">{{blog.author}}</a> {{ blog.created|date('h:iA') }} <a href="#">comments(2)</a></p>
+                            <p>{{ blog.blog(500) }}</p>
+                            <p><time datetime="{{ blog.created|date('c') }}">{{ blog.created|date('l, F j, Y') }}</time></p>
+                            <div class="about-btn">
+                                <a href="#">Read More</a>
+                            </div>
+                            <ul>
+                                <li><p>Share : </p></li>
+                                <li><a href="#"><span class="fb"> </span></a></li>
+                                <li><a href="#"><span class="twit"> </span></a></li>
+                                <li><a href="#"><span class="pin"> </span></a></li>
+                                <li><a href="#"><span class="rss"> </span></a></li>
+                                <li><a href="#"><span class="drbl"> </span></a></li>
+                            </ul>
+                        </div>
+                        {% else %}
+                            <p>There are no blog entries for symblog</p>
+                        {% endfor %}
+                    </div>
+                    {{ render(controller('AppBundle:Pages:sidebar')) }}
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <!--about-end-->
+
+{% endblock %}
+{% block slider %}
+    {{ include('AppBundle:Pages:slider.html.twig', { 'images': images }) }}
+{% endblock %}
