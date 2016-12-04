@@ -28,7 +28,7 @@ class RandomDataModel
      */
     public function getImages($quantity)
     {
-        $images = $this->faker->randomElements($array = array('c-1.jpg', 'c-2.jpg', 'c-3.jpg', 'c-4.jpg', 'c-5.jpg', 'c-6.jpg'), $count = $quantity);
+        $images = $this->faker->randomElements($array = array('c-7.jpg', 'c-2.jpg', 'c-3.jpg', 'c-4.jpg', 'c-5.jpg', 'c-6.jpg'), $count = $quantity);
 
         return $images;
     }
