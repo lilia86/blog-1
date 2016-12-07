@@ -47,6 +47,7 @@ class PagesController extends Controller
      */
     public function contactAction()
     {
+        return array('array' => null);
     }
 
     /**
