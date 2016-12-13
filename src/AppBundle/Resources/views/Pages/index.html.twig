@@ -1,0 +1,93 @@
+{% extends 'AppBundle::main.html.twig' %}
+
+{% block body %}
+    <!--about-starts-->
+    <div class="about">
+        <div class="container">
+            <div class="about-main">
+                <div class="about-btn">
+
+                </div>
+                <div class="col-md-8 about-left">
+                    {% if blogs == false %}
+                        <p style="margin-top: 20px">No posts in the storage. Add new one</p>
+                    {% else %}
+                        {% set lastblog=blogs|last %}
+                        <div class="about-one">
+                            <p>Find The Most</p>
+                            <h3>{{ lastblog.title }}</h3>
+                        </div>
+                        <div class="about-two">
+                            <a href="{{ path('id', {'id': lastblog.getId }) }}"><img src="{{ asset('images/c-2.jpg') }}" alt="" /></a>
+                            <p>Posted by <b>{{ lastblog.getUser.getNickName }}</b><a href="#"></a> {{ lastblog.created|date('h:iA') }} <a href="#">comments({{ lastblog.getComents|length/2 }})</a></p>
+                            {% set tags=lastblog.getTags %}
+                            <p>{%  for tag in tags %}
+                                    <b><a href="{{ path('tag', {'slug': tag.getTagName }) }}">#{{ tag.getTagName }}</a></b>
+                                {% endfor %}
+                            </p>
+                            <p>{{ lastblog.body(500) }}</p>
+                            <p><time datetime="{{ lastblog.created|date('c') }}">{{ lastblog.created|date('l, F j, Y') }}</time></p>
+                            <div class="about-btn">
+
+                                <a href="#">Read More</a>
+
+                            </div>
+                            <ul>
+                                <li><p>Share : </p></li>
+                                <li><a href="#"><span class="fb"> </span></a></li>
+                                <li><a href="#"><span class="twit"> </span></a></li>
+                                <li><a href="#"><span class="pin"> </span></a></li>
+                                <li><a href="#"><span class="rss"> </span></a></li>
+                                <li><a href="#"><span class="drbl"> </span></a></li>
+                            </ul>
+                        </div>
+                        <div class="about-tre">
+                            {% set length=(blogs|length)-1 %}
+                            {% for row in blogs|reverse|slice(1,length)|batch(2) %}
+                                <div class="a-1">
+                                    {% for blog in row %}
+                                        <div class="col-md-6 abt-left">
+                                            <a href="{{ path('id', {'id': blog.getId }) }}"><img src="{{ asset('images/c-3.jpg') }}" alt="" /></a>
+                                            <h6>Find The Most</h6>
+                                            <h3><a href="{{ path('id', {'id': blog.getId }) }}">{{ blog.title }}</a></h3>
+                                            <p>{{ blog.body[:500] ~ '...' }}</p>
+                                                <label><time datetime="{{ blog.created|date('c') }}">{{ blog.created|date('l, F j, Y') }}</time></label>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="clearfix"></div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {{ render(controller('AppBundle:Pages:sidebar')) }}
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!--about-end-->
+    {% if maxPages > 1 %}
+        <ul class="pagination pagination-sm">
+
+            <li {{ thisPage == 1 ? 'class="disabled"' }}>
+                <a href="{{ path('routeName', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">«</a>
+            </li>
+
+
+            {% for i in 1..maxPages %}
+                <li {{ thisPage == i ? 'class="active"' }}>
+                    <a href="{{ path('routeName', {page: i}) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+
+
+            <li {{ thisPage == maxPages ? 'class="disabled"' }}>
+                <a href="{{ path('routeName', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">»</a>
+            </li>
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block slider %}
+    {{ include('AppBundle:Pages:slider.html.twig') }}
+{% endblock %}
