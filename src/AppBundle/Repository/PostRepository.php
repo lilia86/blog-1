@@ -37,7 +37,7 @@ class PostRepository extends EntityRepository
 
     public function paginate($dql, $page = 1, $limit = 3)
     {
-        $paginator = new Paginator($dql);
+        $paginator = new Paginator($dql, $fetchJoinCollection = true);
 
         $paginator->getQuery()
             ->setFirstResult($limit * ($page - 1))

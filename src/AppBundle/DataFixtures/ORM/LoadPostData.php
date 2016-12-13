@@ -80,9 +80,48 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
         $post3->addTag($this->getReference('robu'));
         $post3->addTag($this->getReference('libe'));
 
+        $post4 = new Post();
+        $post4->setTitle('Some historical facts');
+        $post4->setBody('Cras consequat iaculis lorem, id vehicula erat mattis quis. Vivamus laoreet 
+         velit justo, in ven e natis purus pretium sit amet. Praesent lectus tortor, tincidu nt in consectetur 
+         vestibulum, ultrices nec neque. Praesent nec sagittis mauris. Fusce convallis nunc neque. Integer 
+         egestas aliquam interdum. ');
+        $post4->setUser($this->getReference('bloger1'));
+        $post4->setCategoty($this->getReference('hystory'));
+        $post4->addTag($this->getReference('arab'));
+        $post4->addTag($this->getReference('robu'));
+        $post4->addTag($this->getReference('libe'));
+
+        $post5 = new Post();
+        $post5->setTitle('Some historical facts');
+        $post5->setBody('Cras consequat iaculis lorem, id vehicula erat mattis quis. Vivamus laoreet 
+         velit justo, in ven e natis purus pretium sit amet. Praesent lectus tortor, tincidu nt in consectetur 
+         vestibulum, ultrices nec neque. Praesent nec sagittis mauris. Fusce convallis nunc neque. Integer 
+         egestas aliquam interdum. ');
+        $post5->setUser($this->getReference('bloger1'));
+        $post5->setCategoty($this->getReference('hystory'));
+        $post5->addTag($this->getReference('arab'));
+        $post5->addTag($this->getReference('robu'));
+        $post5->addTag($this->getReference('libe'));
+
+        $post6 = new Post();
+        $post6->setTitle('Some historical facts');
+        $post6->setBody('Cras consequat iaculis lorem, id vehicula erat mattis quis. Vivamus laoreet 
+         velit justo, in ven e natis purus pretium sit amet. Praesent lectus tortor, tincidu nt in consectetur 
+         vestibulum, ultrices nec neque. Praesent nec sagittis mauris. Fusce convallis nunc neque. Integer 
+         egestas aliquam interdum. ');
+        $post6->setUser($this->getReference('bloger1'));
+        $post6->setCategoty($this->getReference('hystory'));
+        $post6->addTag($this->getReference('arab'));
+        $post6->addTag($this->getReference('robu'));
+        $post6->addTag($this->getReference('libe'));
+
         $manager->persist($post1);
         $manager->persist($post2);
         $manager->persist($post3);
+        $manager->persist($post4);
+        $manager->persist($post5);
+        $manager->persist($post6);
         $manager->flush();
 
         $this->addReference('post1', $post1);

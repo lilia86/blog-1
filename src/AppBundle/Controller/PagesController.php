@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class PagesController extends Controller
 {
@@ -12,15 +13,19 @@ class PagesController extends Controller
      * @Route("/", name="homepage")
      * @Template()
      */
-    public function indexAction($page = 1)
+    public function indexAction(Request $request, $page = 1)
     {
         $posts = $this->getDoctrine()
             ->getRepository('AppBundle:Post')
             ->getAllPosts();
 
-        $limit = 3;
+        $limit = 2;
         $maxPages = ceil($posts->count() / $limit);
-        $thisPage = $page;
+        $thisPage = $request->query->get('page');
+        if($thisPage === null){
+            $thisPage = $page;
+        }
+        dump($posts);
 
         return array('blogs' => $posts, 'maxPages' => $maxPages, 'thisPage' => $thisPage);
     }
@@ -29,7 +34,7 @@ class PagesController extends Controller
      * @Route("/category/{slug}", name="category")
      * @Template()
      */
-    public function categoryAction($slug, $page = 1)
+    public function categoryAction(Request $request, $slug, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
         $category = $em->getRepository('AppBundle:PostCategory')->findCategoryByName($slug);
@@ -39,7 +44,10 @@ class PagesController extends Controller
         /* $posts = $category[0]->getPosts();*/
         $limit = 3;
         $maxPages = ceil($posts->count() / $limit);
-        $thisPage = $page;
+        $thisPage = $request->query->get('page');
+        if($thisPage === null){
+            $thisPage = $page;
+        }
 
         return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'maxPages' => $maxPages, 'thisPage' => $thisPage));
     }
@@ -67,7 +75,7 @@ class PagesController extends Controller
         $tag = $em->getRepository('AppBundle:PostTag')->findTagByName($slug);
         $posts = $tag[0]->getPosts();
 
-        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts));
+        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'maxPages' => 1));
     }
 
     /**
