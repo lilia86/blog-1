@@ -47,7 +47,7 @@ class User
     /**
      * @var object
      *
-     * @ORM\ManyToOne(targetEntity="UserRole")     *
+     * @ORM\ManyToOne(targetEntity="UserRole")
      */
     private $role;
 

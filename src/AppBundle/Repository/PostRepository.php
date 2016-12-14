@@ -16,6 +16,7 @@ class PostRepository extends EntityRepository
     public function getAllPosts($currentPage = 1)
     {
         $query = $this->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC')
             ->getQuery();
 
         $paginator = $this->paginate($query, $currentPage);

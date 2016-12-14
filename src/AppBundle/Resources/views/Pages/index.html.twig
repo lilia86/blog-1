@@ -14,7 +14,7 @@
                     {% else %}
                         <div class="about-tre">
                             {% set page=app.request.attributes.get('_route_params') %}
-                            {% for row in blogs|reverse|batch(2) %}
+                            {% for row in blogs|batch(2) %}
                                 <div class="a-1">
                                     {% for blog in row %}
                                         <div class="col-md-6 abt-left">

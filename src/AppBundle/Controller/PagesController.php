@@ -31,7 +31,6 @@ class PagesController extends Controller
 
     /**
      * @Route("/category/{slug}", name="category")
-     * @Template()
      */
     public function categoryAction($slug)
     {
@@ -39,12 +38,11 @@ class PagesController extends Controller
         $category = $em->getRepository('AppBundle:PostCategory')->findCategoryByName($slug);
         $posts = $category[0]->getPosts();
 
-        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts));
+        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'maxPages' => 1));
     }
 
     /**
      * @Route("/{id}", name="id")
-     * @Template()
      */
     public function idAction($id)
     {
@@ -57,7 +55,6 @@ class PagesController extends Controller
 
     /**
      * @Route("/tag/{slug}", name="tag")
-     * @Template()
      */
     public function tagAction($slug)
     {
