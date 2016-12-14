@@ -26,7 +26,6 @@ class UserData
      *
      * @ORM\Column(name="user", type="integer", unique=true)
      * @ORM\OneToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
     private $user;
 

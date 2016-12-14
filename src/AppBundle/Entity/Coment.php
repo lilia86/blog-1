@@ -28,7 +28,6 @@ class Coment
      * Many Coments have One Post
      *
      * @ORM\ManyToOne(targetEntity="Post", inversedBy="coments")
-     * @ORM\JoinColumn(name="post", referencedColumnName="id")
      */
     private $post;
 
@@ -38,7 +37,6 @@ class Coment
      * Many Coments have One User
      *
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
     private $user;
 

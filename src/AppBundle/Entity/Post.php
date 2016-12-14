@@ -62,7 +62,7 @@ class Post
 
     /**
      * @var array
-     *            Many Posts have Many Tads
+     * Many Posts have Many Tags
      * @ORM\ManyToMany(targetEntity="PostTag", inversedBy="posts")
      * @ORM\JoinTable(name="connect_posts_tags")
      */
@@ -70,7 +70,7 @@ class Post
 
     /**
      * @var array
-     *            One Post have Many Coments
+     * One Post have Many Coments
      * @ORM\OneToMany(targetEntity="Coment", mappedBy="post", cascade={"persist", "remove"})
      */
     private $coments;

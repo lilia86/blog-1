@@ -15,41 +15,30 @@ class PagesController extends Controller
      */
     public function indexAction(Request $request, $page = 1)
     {
-        $posts = $this->getDoctrine()
-            ->getRepository('AppBundle:Post')
-            ->getAllPosts();
-
-        $limit = 2;
-        $maxPages = ceil($posts->count() / $limit);
+        $limit = 3;
         $thisPage = $request->query->get('page');
         if($thisPage === null){
             $thisPage = $page;
         }
-        dump($posts);
+        $posts = $this->getDoctrine()
+            ->getRepository('AppBundle:Post')
+            ->getAllPosts($thisPage);
+        $maxPages = ceil($posts->count() / $limit);
 
-        return array('blogs' => $posts, 'maxPages' => $maxPages, 'thisPage' => $thisPage);
+        return array('blogs' => $posts, 'maxPages' => $maxPages, 'thisPage' => $thisPage, 'slug' => '');
     }
 
     /**
      * @Route("/category/{slug}", name="category")
      * @Template()
      */
-    public function categoryAction(Request $request, $slug, $page = 1)
+    public function categoryAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         $category = $em->getRepository('AppBundle:PostCategory')->findCategoryByName($slug);
-        $posts = $this->getDoctrine()
-            ->getRepository('AppBundle:Post')
-            ->getPostsByCategory($category[0]);
-        /* $posts = $category[0]->getPosts();*/
-        $limit = 3;
-        $maxPages = ceil($posts->count() / $limit);
-        $thisPage = $request->query->get('page');
-        if($thisPage === null){
-            $thisPage = $page;
-        }
+        $posts = $category[0]->getPosts();
 
-        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'maxPages' => $maxPages, 'thisPage' => $thisPage));
+        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts));
     }
 
     /**

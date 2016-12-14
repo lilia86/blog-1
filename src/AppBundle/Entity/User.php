@@ -47,8 +47,7 @@ class User
     /**
      * @var object
      *
-     * @ORM\ManyToOne(targetEntity="UserRole")
-     * @ORM\JoinColumn(name="role", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="UserRole")     *
      */
     private $role;
 

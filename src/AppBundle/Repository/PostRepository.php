@@ -23,18 +23,6 @@ class PostRepository extends EntityRepository
         return $paginator;
     }
 
-    public function getPostsByCategory($category, $currentPage = 1)
-    {
-        $query = $this->createQueryBuilder('p')
-            ->where('p.category = :category')
-            ->setParameter('category', $category)
-            ->getQuery();
-
-        $paginator = $this->paginate($query, $currentPage);
-
-        return $paginator;
-    }
-
     public function paginate($dql, $page = 1, $limit = 3)
     {
         $paginator = new Paginator($dql, $fetchJoinCollection = true);
