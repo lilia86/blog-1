@@ -15,7 +15,7 @@ class PagesController extends Controller
      */
     public function indexAction(Request $request, $page = 1)
     {
-        $limit = 3;
+
         $thisPage = $request->query->get('page');
         if($thisPage === null){
             $thisPage = $page;
@@ -23,16 +23,17 @@ class PagesController extends Controller
         $posts = $this->getDoctrine()
             ->getRepository('AppBundle:Post')
             ->getAllPosts($thisPage);
+        $limit = 3;
         $maxPages = ceil($posts->count() / $limit);
 
-        return array('blogs' => $posts, 'maxPages' => $maxPages, 'thisPage' => $thisPage, 'slug' => '');
+        return array('blogs' => $posts, 'maxPages' => $maxPages, 'thisPage' => $thisPage);
     }
 
     /**
      * @Route("/category/{slug}", name="category")
      * @Template()
      */
-    public function categoryAction(Request $request, $slug)
+    public function categoryAction($slug)
     {
         $em = $this->getDoctrine()->getManager();
         $category = $em->getRepository('AppBundle:PostCategory')->findCategoryByName($slug);
