@@ -14,7 +14,7 @@ class PostCategoryRepository extends EntityRepository
 {
     public function findCategoryByName($slug)
     {
-        $query = $this->getEntityManager()->createQuery('SELECT c FROM AppBundle:PostCategory c WHERE c.categoryName = :name');
+        $query = $this->getEntityManager()->createQuery('SELECT c FROM AppBundle:PostCategory c WHERE c.name = :name');
         $query->setParameters(array('name' => $slug));
 
         return $query->getResult();

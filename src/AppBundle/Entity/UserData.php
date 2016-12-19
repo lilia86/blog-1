@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 
 /**
  * UserData.
@@ -12,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserData
 {
+    use Timestampable;
     /**
      * @var int
      *
@@ -22,10 +24,9 @@ class UserData
     private $id;
 
     /**
-     * @var int
+     * @var User object
      *
-     * @ORM\Column(name="user", type="integer", unique=true)
-     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\OneToOne(targetEntity="UserBloger", inversedBy="information")
      */
     private $user;
 
@@ -54,13 +55,13 @@ class UserData
     }
 
     /**
-     * Set userId.
+     * Set user.
      *
-     * @param int $userId
+     * @param User object
      *
      * @return UserData
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 

@@ -1,55 +1,70 @@
 {% extends 'AppBundle::main.html.twig' %}
 
 {% block body %}
-    <!--about-starts-->
-    <div class="about">
+    <div class="single">
         <div class="container">
-            <div class="about-main">
-                <div class="about-btn">
-
+            <div class="single-top">
+                <a href="#"><img class="img-responsive" src="{{ asset('images/single-1.jpg') }}" alt=" "></a>
+                <div class=" single-grid">
+                    <h4>{{ blog.title }}</h4>
+                    <ul class="blog-ic">
+                        <li><a href="{{ path('author', {'slug': blog.getUser.getNickName }) }}"><span> <i  class="glyphicon glyphicon-user"> </i>{{ blog.getUser.getNickName }}</span> </a> </li>
+                        <li><span><i class="glyphicon glyphicon-time"> </i>{{ blog.getCreatedAt|date('h:iA') }}</span></li>
+                        <li><span><i class="glyphicon glyphicon-eye-open"> </i>Hits:145</span></li>
+                    </ul>
+                    {% set tags=blog.getTags %}
+                    <p>{%  for tag in tags %}
+                            <b><a href="{{ path('tag', {'slug': tag.getName }) }}">#{{ tag.getName }}</a></b>
+                        {% endfor %}
+                    </p>
+                    <p>{{ blog.body }}</p>
+                    <p><time datetime="{{ blog.getCreatedAt|date('c') }}">{{ blog.getCreatedAt|date('l, F j, Y') }}</time></p>
                 </div>
-                <div class="col-md-8 about-left">
-                    {% if blog == false %}
-                        <p style="margin-top: 20px">No posts in the storage. Add new one</p>
-                    {% else %}
-
-                        <div class="about-one">
-                            <p>Find The Most</p>
-                            <h3>{{ blog.title }}</h3>
-                        </div>
-                        <div class="about-two">
-                            <a href="#"><img src="{{ asset('images/c-2.jpg') }}" alt="" /></a>
-                            <p>Posted by <b>{{ blog.getUser.getNickName }}</b><a href="#"></a> {{ blog.created|date('h:iA') }} <a href="#">comments({{ blog.getComents|length/2 }})</a></p>
-                            {% set tags=blog.getTags %}
-                            <p>{%  for tag in tags %}
-                                    <b><a href="{{ path('tag', {'slug': tag.getTagName }) }}">#{{ tag.getTagName }}</a></b>
-                                {% endfor %}
-                            </p>
-                            <p>{{ blog.body }}</p>
-                            <p><time datetime="{{ blog.created|date('c') }}">{{ blog.created|date('l, F j, Y') }}</time></p>
-                            <div class="about-btn">
-
-                                <a href="#">Read More</a>
-
+                <div class="comments heading">
+                    <h3>Comments</h3>
+                    {% set coments=blog.getComents %}
+                    {%  for coment in coments %}
+                        <div class="media">
+                            <div class="media-body">
+                                <h4 class="media-heading"><a href="#">{{ coment.getUser.getNickName }}</a></h4>
+                                <p>{{ coment.getContent }}</p>
                             </div>
-                            <ul>
-                                <li><p>Share : </p></li>
-                                <li><a href="#"><span class="fb"> </span></a></li>
-                                <li><a href="#"><span class="twit"> </span></a></li>
-                                <li><a href="#"><span class="pin"> </span></a></li>
-                                <li><a href="#"><span class="rss"> </span></a></li>
-                                <li><a href="#"><span class="drbl"> </span></a></li>
-                            </ul>
+                            <div class="media-right">
+                                <a href="#">
+                                    <img src="{{ asset('images/si.png') }}" alt=""> </a>
+                            </div>
                         </div>
-                    {% endif %}
+                        {% set child_coments=coment.getChildComents %}
+                        {% if child_coments != null %}
+                        {%  for child_coment in child_coments %}
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img src="{{ asset('images/si.png') }}" alt="">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{ child_coment.getUser.getNickName }}</h4>
+                                <p>{{ child_coment.getContent }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                {{ render(controller('AppBundle:Pages:sidebar')) }}
-                <div class="clearfix"></div>
+                <div class="comment-bottom heading">
+                    <h3>Leave a Comment</h3>
+                    <form>
+                        <input type="text" value="Name" onfocus="this.value='';" onblur="if (this.value == '') {this.value ='Name';}">
+                        <input type="text" value="Email" onfocus="this.value='';" onblur="if (this.value == '') {this.value ='Email';}">
+                        <input type="text" value="Subject" onfocus="this.value='';" onblur="if (this.value == '') {this.value ='Subject';}">
+                        <textarea cols="77" rows="6" value=" " onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'Message';}">Message</textarea>
+                        <input type="submit" value="Send">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <!--about-end-->
-
 {% endblock %}
 {% block slider %}
     {{ include('AppBundle:Pages:slider.html.twig') }}

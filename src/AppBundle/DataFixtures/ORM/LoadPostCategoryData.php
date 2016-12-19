@@ -12,13 +12,13 @@ class LoadPostCategoryData extends AbstractFixture implements OrderedFixtureInte
     public function load(ObjectManager $manager)
     {
         $category1 = new PostCategory();
-        $category1->setCategoryName('Buying');
+        $category1->setName('Buying');
 
         $category2 = new PostCategory();
-        $category2->setCategoryName('Cooking');
+        $category2->setName('Cooking');
 
         $category3 = new PostCategory();
-        $category3->setCategoryName('History');
+        $category3->setName('History');
 
         $manager->persist($category1);
         $manager->persist($category2);
@@ -32,6 +32,6 @@ class LoadPostCategoryData extends AbstractFixture implements OrderedFixtureInte
 
     public function getOrder()
     {
-        return 4;
+        return 3;
     }
 }

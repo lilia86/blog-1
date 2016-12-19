@@ -12,13 +12,13 @@ class LoadPostTagData extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $tag1 = new PostTag();
-        $tag1->setTagName('arabica');
+        $tag1->setName('arabica');
 
         $tag2 = new PostTag();
-        $tag2->setTagName('robusta');
+        $tag2->setName('robusta');
 
         $tag3 = new PostTag();
-        $tag3->setTagName('liberica');
+        $tag3->setName('liberica');
 
         $manager->persist($tag1);
         $manager->persist($tag2);
@@ -27,11 +27,11 @@ class LoadPostTagData extends AbstractFixture implements OrderedFixtureInterface
 
         $this->addReference('arab', $tag1);
         $this->addReference('robu', $tag2);
-        $this->addReference('libe', $tag1);
+        $this->addReference('libe', $tag3);
     }
 
     public function getOrder()
     {
-        return 5;
+        return 4;
     }
 }

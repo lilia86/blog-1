@@ -3,7 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Coment.
@@ -13,6 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Coment
 {
+    use Timestampable;
     /**
      * @var int
      *
@@ -48,20 +50,23 @@ class Coment
     private $content;
 
     /**
-     * @var \DateTime
+     * @var ArrayCollection
      *
-     * @ORM\Column(name="created", type="datetime")
-     * @Gedmo\Timestampable(on="create")
+     * @ORM\OneToMany(targetEntity="Coment", mappedBy="parent_coment", cascade={"persist", "remove"})
      */
-    private $created;
+    private $child_coments;
 
     /**
-     * @var \DateTime
+     * @var ArrayCollection
      *
-     * @ORM\Column(name="updated", type="datetime")
-     * @Gedmo\Timestampable(on="update")
+     * @ORM\ManyToOne(targetEntity="Coment", inversedBy="child_coments")
      */
-    private $updated;
+    private $parent_coment;
+
+    public function __construct()
+    {
+        $this->child_coments = new ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -146,22 +151,22 @@ class Coment
     }
 
     /**
-     * Get created.
+     * @param Coment $coment
      *
-     * @return \DateTime
+     * @return $this
      */
-    public function getCreated()
+    public function setParentComent(Coment $coment)
     {
-        return $this->created;
+        $this->parent_coment = $coment;
+
+        return $this;
     }
 
     /**
-     * Get updated.
-     *
-     * @return \DateTime
+     * @return ArrayCollection
      */
-    public function getUpdated()
+    public function getChildComents()
     {
-        return $this->updated;
+        return $this->child_coments;
     }
 }

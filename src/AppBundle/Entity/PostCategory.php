@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -14,6 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class PostCategory
 {
+    use Timestampable;
+
     /**
      * @var int
      *
@@ -26,35 +28,9 @@ class PostCategory
     /**
      * @var string
      *
-     * @ORM\Column(name="category_name", type="string", length=45, unique=true)
+     * @ORM\Column(name="name", type="string", length=45, unique=true)
      */
-    private $categoryName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    private $description;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="created", type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     */
-    private $created;
-
-    /**
-     * One Category has Many Posts.
-     *
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="category")
-     */
-    private $posts;
-
-    public function __construct()
-    {
-        $this->posts = new ArrayCollection();
-    }
+    private $name;
 
     /**
      * Get id.
@@ -67,27 +43,46 @@ class PostCategory
     }
 
     /**
-     * Set categoryName.
+     * Set name.
      *
-     * @param string $categoryName
+     * @param string $name
      *
-     * @return PostCategory
+     * @return object
      */
-    public function setCategoryName($categoryName)
+    public function setName($name)
     {
-        $this->categoryName = $categoryName;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get categoryName.
+     * Get name.
      *
      * @return string
      */
-    public function getCategoryName()
+    public function getName()
     {
-        return $this->categoryName;
+        return $this->name;
+    }
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="category")
+     */
+    private $posts;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
     }
 
     /**
@@ -122,15 +117,5 @@ class PostCategory
     public function getPosts()
     {
         return $this->posts;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
     }
 }

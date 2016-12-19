@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\PostCategory;
+use AppBundle\Entity\UserBloger;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -16,6 +18,32 @@ class PostRepository extends EntityRepository
     public function getAllPosts($currentPage = 1)
     {
         $query = $this->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC')
+            ->getQuery();
+
+        $paginator = $this->paginate($query, $currentPage);
+
+        return $paginator;
+    }
+
+    public function getPostsByCategory(PostCategory $post_category, $currentPage = 1)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->where('p.category = :category')
+            ->setParameter('category', $post_category)
+            ->orderBy('p.id', 'DESC')
+            ->getQuery();
+
+        $paginator = $this->paginate($query, $currentPage);
+
+        return $paginator;
+    }
+
+    public function getPostsByUser(UserBloger $user, $currentPage = 1)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $user)
             ->orderBy('p.id', 'DESC')
             ->getQuery();
 

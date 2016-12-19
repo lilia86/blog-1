@@ -5,28 +5,26 @@ namespace AppBundle\DataFixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\User;
+use AppBundle\Entity\UserBloger;
+use AppBundle\Entity\UserGuest;
 
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $user1 = new User();
+        $user1 = new UserBloger();
         $user1->setNickName('bloger1');
         $user1->setFirstName('John');
-        $user1->setRole($this->getReference('bloger'));
         $user1->setPassword('test1');
 
-        $user2 = new User();
+        $user2 = new UserBloger();
         $user2->setNickName('bloger2');
         $user2->setFirstName('Alice');
-        $user2->setRole($this->getReference('bloger'));
         $user2->setPassword('test2');
 
-        $user3 = new User();
+        $user3 = new UserGuest();
         $user3->setNickName('some_user');
         $user3->setFirstName('Nick');
-        $user3->setRole($this->getReference('user'));
         $user3->setPassword('test3');
 
         $manager->persist($user1);
@@ -41,6 +39,6 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 
     public function getOrder()
     {
-        return 2;
+        return 1;
     }
 }

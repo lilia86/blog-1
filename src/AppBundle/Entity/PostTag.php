@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -14,6 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class PostTag
 {
+    use Timestampable;
+
     /**
      * @var int
      *
@@ -26,29 +28,9 @@ class PostTag
     /**
      * @var string
      *
-     * @ORM\Column(name="tag_name", type="string", length=45, unique=true)
+     * @ORM\Column(name="name", type="string", length=45, unique=true)
      */
-    public $tagName;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     */
-    private $created;
-
-    /**
-     * Many Tags have Many Posts.
-     *
-     * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")
-     */
-    private $posts;
-
-    public function __construct()
-    {
-        $this->posts = new ArrayCollection();
-    }
+    private $name;
 
     /**
      * Get id.
@@ -61,31 +43,43 @@ class PostTag
     }
 
     /**
-     * Set tagName.
+     * Set name.
      *
-     * @param string $tagName
+     * @param string $name
      *
-     * @return PostTag
+     * @return object
      */
-    public function setTagName($tagName)
+    public function setName($name)
     {
-        $this->tagName = $tagName;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get tagName.
+     * Get name.
      *
      * @return string
      */
-    public function getTagName()
+    public function getName()
     {
-        return $this->tagName;
+        return $this->name;
     }
 
     /**
-     * @param Post $post
+     * @var ArrayCollection
+     *                      Many Tags have Many Posts
+     * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")
+     */
+    private $posts;
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
+
+    /**
+     * @param PostTag $tag
      *
      * @return $this
      */
@@ -100,22 +94,12 @@ class PostTag
     }
 
     /**
-     * Get tagName.
+     * Get Posts.
      *
-     * @return string
+     * @return array
      */
     public function getPosts()
     {
         return $this->posts;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
     }
 }

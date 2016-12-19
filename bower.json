@@ -1,0 +1,21 @@
+{
+  "name": "blog-1",
+  "description": "Blog schema https://docs.google.com/drawings/d/17dOn-x3_4P9l2We0Bud_qOUu7Js9ycb1ei9s8a4Lnto/edit?usp=sharing",
+  "main": "index.js",
+  "authors": [
+    "lilia86 <liliagirl@mail.ru>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/lilia86/blog-1",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}

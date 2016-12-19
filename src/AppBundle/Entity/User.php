@@ -3,16 +3,17 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * User.
  *
+ * @ORM\Entity
  * @ORM\Table(name="user")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="role", type="string")
+ * @ORM\DiscriminatorMap( {"user" = "User", "admin" = "UserAdmin", "bloger" = "UserBloger", "guest" = "UserGuest"} )
  */
-class User
+abstract class User
 {
     /**
      * @var int
@@ -33,49 +34,9 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="first_name", type="string", length=45, nullable=true)
-     */
-    private $firstName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="last_name", type="string", length=45, nullable=true)
-     */
-    private $lastName;
-
-    /**
-     * @var object
-     *
-     * @ORM\ManyToOne(targetEntity="UserRole")
-     */
-    private $role;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
-
-    /**
-     * @var \DateTime
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="created", type="datetime")
-     */
-    private $created;
-
-    /**
-     * One User has Many Posts.
-     *
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="user", cascade={"persist", "remove"})
-     */
-    private $posts;
-
-    public function __construct()
-    {
-        $this->posts = new ArrayCollection();
-    }
 
     /**
      * Get id.
@@ -109,88 +70,6 @@ class User
     public function getNickName()
     {
         return $this->nickName;
-    }
-
-    /**
-     * Set first.
-     *
-     * @param string $first
-     *
-     * @return User
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    /**
-     * Get first.
-     *
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * Set lastName.
-     *
-     * @param string $lastName
-     *
-     * @return User
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    /**
-     * Get lastName.
-     *
-     * @return string
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * Set role.
-     *
-     * @param UserRole $role
-     *
-     * @return User
-     */
-    public function setRole(UserRole $role)
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    /**
-     * Get role.
-     *
-     * @return object
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
     }
 
     /**

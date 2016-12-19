@@ -12,11 +12,11 @@ class LoadUserInfData extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $user1 = new UserData();
-        $user1->setUser('1');
+        $user1->setUser($this->getReference('bloger1'));
         $user1->setEmail('john@email.com');
 
         $user2 = new UserData();
-        $user2->setUser('2');
+        $user2->setUser($this->getReference('bloger2'));
         $user2->setEmail('alice@email.com');
 
         $manager->persist($user1);
@@ -26,6 +26,6 @@ class LoadUserInfData extends AbstractFixture implements OrderedFixtureInterface
 
     public function getOrder()
     {
-        return 3;
+        return 2;
     }
 }

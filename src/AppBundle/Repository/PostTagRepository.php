@@ -14,7 +14,7 @@ class PostTagRepository extends EntityRepository
 {
     public function findTagByName($slug)
     {
-        $query = $this->getEntityManager()->createQuery('SELECT c FROM AppBundle:PostTag c WHERE c.tagName = :name');
+        $query = $this->getEntityManager()->createQuery('SELECT c FROM AppBundle:PostTag c WHERE c.name = :name');
         $query->setParameters(array('name' => $slug));
 
         return $query->getResult();
