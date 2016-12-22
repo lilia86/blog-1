@@ -54,7 +54,7 @@ class PagesController extends Controller
      *
      * @Route("/author/{slug}", name="author")
      */
-    public function Action(Request $request, $slug, $page = 1)
+    public function authorAction(Request $request, $slug, $page = 1)
     {
         $thisPage = $request->query->get('page');
         if ($thisPage === null) {
