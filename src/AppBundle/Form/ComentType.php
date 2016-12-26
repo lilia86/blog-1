@@ -27,7 +27,7 @@ class ComentType extends AbstractType
                 'label' => 'You coment',
             ])
         ;
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $coment = $event->getData();
             $form = $event->getForm();
             if (!$coment || $coment->getId() === null) {

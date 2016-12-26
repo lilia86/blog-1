@@ -68,7 +68,7 @@ class PostType extends AbstractType
                 'disabled' => true,
             ))
         ;
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $post = $event->getData();
             $form = $event->getForm();
             if (!$post || $post->getId() === null) {
