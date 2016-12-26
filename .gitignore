@@ -16,3 +16,10 @@
 /web/bundles/
 .idea/
 *~
+/bower_components/
+/node_modules/
+/web/fonts/
+/web/css/
+/web/images/
+/web/js/
+/web-src/
