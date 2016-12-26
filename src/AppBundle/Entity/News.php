@@ -28,7 +28,7 @@ class News extends ArticlesSuperClass
 
     /**
      * @var ArrayCollection
-     * One Post have Many Coments
+     *                      One Post have Many Coments
      * @ORM\OneToMany(targetEntity="Coment", mappedBy="post", cascade={"persist", "remove"})
      */
     private $coments;

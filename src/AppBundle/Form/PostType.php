@@ -15,10 +15,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 class PostType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -26,22 +24,22 @@ class PostType extends AbstractType
                 'class' => 'AppBundle:UserBloger',
                 'label' => 'Author',
                 'choice_label' => 'nickName',
-                'disabled' => true
+                'disabled' => true,
             ))
-            ->add('title', TextType::class,[
+            ->add('title', TextType::class, [
                 'required' => true,
                 'label' => 'Title',
-                'attr' => ['class' => 'test col-xs-6']
+                'attr' => ['class' => 'test col-xs-6'],
             ])
-            ->add('body', TextareaType::class,[
+            ->add('body', TextareaType::class, [
                 'required' => true,
                 'label' => 'Body',
-                'attr' => ['class' => 'test col-xs-6']
+                'attr' => ['class' => 'test col-xs-6'],
             ])
             ->add('image', FileType::class, [
                 'required' => false,
                 'label' => 'Image',
-                'attr' => ['class' => 'test col-xs-6']
+                'attr' => ['class' => 'test col-xs-6'],
             ])
             ->add('category', EntityType::class, array(
                 'class' => 'AppBundle:PostCategory',
@@ -49,7 +47,7 @@ class PostType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.description', 'ASC');
                 },
-                'choice_label' => 'description'
+                'choice_label' => 'description',
 
             ))
             ->add('tags', EntityType::class, array(
@@ -64,10 +62,10 @@ class PostType extends AbstractType
 
             ))
             ->add('created_at', DateTimeType::class, array(
-                'disabled' => true
+                'disabled' => true,
             ))
             ->add('updated_at', DateTimeType::class, array(
-                'disabled' => true
+                'disabled' => true,
             ))
         ;
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
@@ -80,21 +78,16 @@ class PostType extends AbstractType
             }
         });
     }
-    
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Post::class
+            'data_class' => Post::class,
         ));
-
     }
-
 
     public function getBlockPrefix()
     {
         return 'appbundle_post';
     }
-
-
 }

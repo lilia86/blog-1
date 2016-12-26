@@ -3,17 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Post;
-use AppBundle\Entity\UserBloger;
 use AppBundle\Entity\Coment;
 use AppBundle\Form\ComentType;
-use AppBundle\Form\PostType;
-use AppBundle\Form\UserBlogerType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 class ComentController extends Controller
@@ -40,7 +34,6 @@ class ComentController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($coment);
             $em->flush();
-
         }
 
         return $this->render('AppBundle:Pages:single.html.twig', array('blog' => $post, 'form' => $form->createView()));
@@ -65,12 +58,10 @@ class ComentController extends Controller
             $em->flush();
 
             return $this->redirectToRoute('homepage');
-
         }
 
         return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form;
 
-
 use AppBundle\Entity\UserBloger;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -11,19 +10,17 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 class UserBlogerType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nickName', TextType::class,[
+            ->add('nickName', TextType::class, [
                 'required' => true,
                 'label' => 'NickName',
 
             ])
-            ->add('firstName', TextType::class,[
+            ->add('firstName', TextType::class, [
                 'required' => false,
                 'label' => 'Name',
 
@@ -33,7 +30,7 @@ class UserBlogerType extends AbstractType
                 'label' => 'lastName',
 
             ])
-            ->add('password', TextType::class,[
+            ->add('password', TextType::class, [
                 'required' => true,
                 'label' => 'password',
 
@@ -47,9 +44,7 @@ class UserBlogerType extends AbstractType
                 $form->remove('nickName');
             }
         });
-
     }
-    
 
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -59,11 +54,8 @@ class UserBlogerType extends AbstractType
         ));
     }
 
-
     public function getBlockPrefix()
     {
         return 'appbundle_bloger';
     }
-
-
 }

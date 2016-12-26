@@ -35,14 +35,14 @@ class Post extends ArticlesSuperClass
 
     /**
      * @var ArrayCollection
-     * Many Posts have Many Tags
+     *                      Many Posts have Many Tags
      * @ORM\ManyToMany(targetEntity="PostTag", inversedBy="posts")
      */
     private $tags;
 
     /**
      * @var ArrayCollection
-     * One Post have Many Coments
+     *                      One Post have Many Coments
      * @ORM\OneToMany(targetEntity="Coment", mappedBy="post", cascade={"persist", "remove"})
      */
     private $coments;

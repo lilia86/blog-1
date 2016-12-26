@@ -57,7 +57,6 @@ class UserData
         return $this->id;
     }
 
-
     /**
      * Set email.
      *

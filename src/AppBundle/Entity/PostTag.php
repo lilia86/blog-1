@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -37,7 +36,7 @@ class PostTag
 
     /**
      * @var ArrayCollection
-     * Many Tags have Many Posts
+     *                      Many Tags have Many Posts
      * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")
      */
     private $posts;

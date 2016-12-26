@@ -3,22 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Post;
-use AppBundle\Entity\UserBloger;
-use AppBundle\Entity\Coment;
-use AppBundle\Form\ComentType;
-use AppBundle\Form\PostType;
-use AppBundle\Form\UserBlogerType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 class PagesController extends Controller
 {
-
     /**
      * Getting all existing posts.
      *
@@ -50,5 +41,4 @@ class PagesController extends Controller
 
         return array('items' => $news);
     }
-
 }

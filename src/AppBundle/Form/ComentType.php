@@ -13,7 +13,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ComentType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -21,11 +20,11 @@ class ComentType extends AbstractType
                 'class' => 'AppBundle:Post',
                 'label' => 'Post',
                 'choice_label' => 'title',
-                'disabled' => true
+                'disabled' => true,
             ))
-            ->add('content', TextareaType::class,[
+            ->add('content', TextareaType::class, [
                 'required' => true,
-                'label' => 'You coment'
+                'label' => 'You coment',
             ])
         ;
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
@@ -36,7 +35,6 @@ class ComentType extends AbstractType
             }
         });
     }
-    
 
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -46,11 +44,8 @@ class ComentType extends AbstractType
         ));
     }
 
-
     public function getBlockPrefix()
     {
         return 'appbundle_coment';
     }
-
-
 }

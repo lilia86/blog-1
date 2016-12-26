@@ -5,22 +5,14 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Post;
 use AppBundle\Entity\UserBloger;
 use AppBundle\Entity\User;
-use AppBundle\Entity\Coment;
-use AppBundle\Form\ComentType;
-use AppBundle\Form\PostType;
 use AppBundle\Form\UserBlogerType;
-use AppBundle\Form\UserUpdateType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends Controller
 {
-
     /**
      * Creates a new user entity.
      *
@@ -29,7 +21,6 @@ class UserController extends Controller
      */
     public function newUserAction(Request $request)
     {
-
         $user = new UserBloger();
         $form = $this->createForm(UserBlogerType::class, $user);
         $form->handleRequest($request);
@@ -61,7 +52,6 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $em->persist($user);
             $em->flush();
 
@@ -72,5 +62,4 @@ class UserController extends Controller
             'form' => $form->createView(),
         ));
     }
-
 }

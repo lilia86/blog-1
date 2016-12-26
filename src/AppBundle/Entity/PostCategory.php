@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * PostCategory.
@@ -27,8 +26,6 @@ class PostCategory
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-
 
     /**
      * @var string
@@ -62,9 +59,6 @@ class PostCategory
     {
         return $this->id;
     }
-
-
-
 
     /**
      * Set description.
