@@ -68,7 +68,7 @@ class ComentController extends Controller
 
         }
 
-        return $this->render('form.html.twig', array(
+        return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }

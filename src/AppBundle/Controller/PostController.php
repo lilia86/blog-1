@@ -39,7 +39,7 @@ class PostController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('form.html.twig', array(
+        return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -67,7 +67,7 @@ class PostController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('form.html.twig', array(
+        return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }

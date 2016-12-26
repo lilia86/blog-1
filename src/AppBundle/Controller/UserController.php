@@ -42,7 +42,7 @@ class UserController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('form.html.twig', array(
+        return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -50,27 +50,25 @@ class UserController extends Controller
     /**
      * Update a user entity.
      *
-     * @Route("/update_user", name="user_update")
+     * @Route("/update_user/{id}", name="user_update")
      * @Method({"GET", "POST"})
      */
-    public function updateUserAction(Request $request)
+    public function updateUserAction(Request $request, $id)
     {
-
-        $user = $this->getUser();
-
-        $user = $em->getRepository('AppBundle:UserBloger')->find(2);
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('AppBundle:UserBloger')->find($id);
         $form = $this->createForm(UserBlogerType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+
             $em->persist($user);
             $em->flush();
 
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('form.html.twig', array(
+        return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }
