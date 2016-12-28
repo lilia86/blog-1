@@ -25,6 +25,8 @@ class PostController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                $user = $this->getUser();
+                $post->setUser($user);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($post);
                 $em->flush();
@@ -48,6 +50,7 @@ class PostController extends Controller
         $post = $this->getDoctrine()
             ->getRepository('AppBundle:Post')
             ->find($id);
+        $user = $this->getUser();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
