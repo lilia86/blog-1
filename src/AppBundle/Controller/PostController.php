@@ -50,7 +50,6 @@ class PostController extends Controller
         $post = $this->getDoctrine()
             ->getRepository('AppBundle:Post')
             ->find($id);
-        $user = $this->getUser();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
