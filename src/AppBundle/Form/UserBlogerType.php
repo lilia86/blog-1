@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use AppBundle\Entity\UserBloger;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -30,7 +31,7 @@ class UserBlogerType extends AbstractType
                 'label' => 'lastName',
 
             ])
-            ->add('password', TextType::class, [
+            ->add('password', PasswordType::class, [
                 'required' => true,
                 'label' => 'password',
 
