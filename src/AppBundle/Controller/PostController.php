@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Post;
-use AppBundle\Entity\UserBloger;
+use Doctrine\Common\Collections\Criteria;
 use AppBundle\Form\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -25,11 +25,7 @@ class PostController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $user = $this->getUser();
-                $post->setUser($user);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($post);
-                $em->flush();
+                $this->get('app.dbManager')->save($post);
 
                 return $this->redirectToRoute('homepage');
             }
@@ -47,16 +43,12 @@ class PostController extends Controller
      */
     public function updatePostAction(Request $request, $id)
     {
-        $post = $this->getDoctrine()
-            ->getRepository('AppBundle:Post')
-            ->find($id);
+        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($post);
-            $em->flush();
+            $this->get('app.dbManager')->update();
 
             return $this->redirectToRoute('homepage');
         }
@@ -67,23 +59,32 @@ class PostController extends Controller
     }
 
     /**
+     * Delete post.
+     *
+     * @Route("/delete_post/{id}", name="delete_post")
+     * @Method({"GET", "POST"})
+     */
+    public function deletePostAction(Request $request, $id)
+    {
+        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id);
+        $this->get('app.dbManager')->delete($post);
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
      * Getting posts by category.
      *
      * @Route("/category/{slug}", name="category")
      */
-    public function categoryAction(Request $request, $slug, $page = 1)
+    public function categoryAction(Request $request, $slug)
     {
         $thisPage = $request->query->get('page');
-        if ($thisPage === null) {
-            $thisPage = $page;
-        }
-        $em = $this->getDoctrine()->getManager();
-        $category = $em->getRepository('AppBundle:PostCategory')->findCategoryByName($slug);
-        $posts = $em->getRepository('AppBundle:Post')->getPostsByCategory($category[0], $thisPage);
-        $limit = 3;
-        $maxPages = ceil($posts->count() / $limit);
+        $category = $this->getDoctrine()->getRepository('AppBundle:PostCategory')->findCategoryByName($slug);
+        $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getPostsByCategory($category[0], $thisPage);
+        $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
 
-        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'slug' => $slug, 'maxPages' => $maxPages, 'thisPage' => $thisPage));
+        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'slug' => $slug, 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]));
     }
 
     /**
@@ -91,19 +92,14 @@ class PostController extends Controller
      *
      * @Route("/author/{slug}", name="author")
      */
-    public function authorAction(Request $request, $slug, $page = 1)
+    public function authorAction(Request $request, $slug)
     {
         $thisPage = $request->query->get('page');
-        if ($thisPage === null) {
-            $thisPage = $page;
-        }
-        $em = $this->getDoctrine()->getManager();
-        $author = $em->getRepository('AppBundle:UserBloger')->findUserByName($slug);
-        $posts = $em->getRepository('AppBundle:Post')->getPostsByUser($author[0], $thisPage);
-        $limit = 3;
-        $maxPages = ceil($posts->count() / $limit);
+        $author = $this->getDoctrine()->getRepository('AppBundle:UserBloger')->findUserByName($slug);
+        $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getPostsByUser($author[0], $thisPage);
+        $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
 
-        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'slug' => $slug, 'maxPages' => $maxPages, 'thisPage' => $thisPage));
+        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'slug' => $slug, 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]));
     }
 
     /**
@@ -111,20 +107,15 @@ class PostController extends Controller
      *
      * @Route("/tag/{slug}", name="tag")
      */
-    public function tagAction(Request $request, $slug, $page = 1)
+    public function tagAction(Request $request, $slug)
     {
         $thisPage = $request->query->get('page');
-        if ($thisPage === null) {
-            $thisPage = $page;
-        }
-        $em = $this->getDoctrine()->getManager();
-        $tag = $em->getRepository('AppBundle:PostTag')->findTagByName($slug);
+        $tag = $this->getDoctrine()->getRepository('AppBundle:PostTag')->findTagByName($slug);
         $posts = $tag[0]->getPosts();
-        $limit = 3;
-        $maxPages = ceil($posts->count() / $limit);
-        $criteria = Criteria::create()->orderBy(array('id' => Criteria::DESC))->setFirstResult($limit * ($thisPage - 1))->setMaxResults($limit);
+        $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
+        $criteria = Criteria::create()->orderBy(array('id' => Criteria::DESC))->setFirstResult($pagesParameters[2] * ($thisPage - 1))->setMaxResults($pagesParameters[2]);
         $match_posts = $posts->matching($criteria);
 
-        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $match_posts, 'slug' => $slug, 'maxPages' => $maxPages, 'thisPage' => $thisPage));
+        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $match_posts, 'slug' => $slug, 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]));
     }
 }

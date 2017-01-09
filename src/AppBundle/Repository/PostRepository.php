@@ -52,8 +52,22 @@ class PostRepository extends EntityRepository
         return $paginator;
     }
 
+    public function getFiveMostPopular()
+    {
+        $query = $this->createQueryBuilder('p')
+            ->orderBy('p.count', 'DESC')
+            ->getQuery();
+
+        $paginator = $this->paginate($query);
+
+        return $paginator;
+    }
+
     public function paginate($dql, $page = 1, $limit = 3)
     {
+        if ($page === null) {
+            $page = 1;
+        }
         $paginator = new Paginator($dql, $fetchJoinCollection = true);
 
         $paginator->getQuery()

@@ -1,0 +1,31 @@
+<script>
+    $(document).ready(function() {
+        $("#link_child_coments").click(function(event){
+            var id = $("#child_coment_id").val();
+            var $loadContent = $("#childcoments") ;
+            var routeWithPlaceHolder= "{{ path('sub_coment', {'id': '_id_'}) }}" ;
+            var routeToLoad = routeWithPlaceHolder.replace("_id_",id) ;
+            $loadContent.load(routeToLoad) ;
+        });
+    });
+</script>
+{% set child_coments=coment.getChildComents %}
+      {% if child_coments != null %}
+          {%  for child_coment in child_coments %}
+
+                  <div class="media-left">
+                      <a href="#">
+                          <img src="{{ asset('images/si.png') }}" alt="">
+                      </a>
+                  </div>
+                  <div class="media-body">
+                      <h4 class="media-heading">{{ child_coment.getUser.getNickName }}
+                          <a href="{{ path('delete_coment', {'id': child_coment.getId }) }}"
+                             style="font-size: 10px">  Delete coment</a></h4>
+                      <p>{{ child_coment.getContent }}</p>
+                  </div>
+              <div id = "link_child_coments" style="font-size:10px;" >  Back comments ({{ child_coment.getChildComents|length }}) </div>
+              <input type="text" id = "child_coment_id" value="{{ child_coment.getId }}" hidden>
+              <div class="media" id = "childcoments" style="width: 90%; float: right"></div>
+          {% endfor %}
+      {% endif %}

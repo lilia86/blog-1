@@ -36,7 +36,7 @@ class LoadComentData extends AbstractFixture implements OrderedFixtureInterface
          vestibulum, ultrices nec neque. Praesent nec sagittis mauris. Fusce convallis nunc neque. Integer 
          egestas aliquam interdum. Nulla ante diam, interdum nec tempus eu, feugiat vel erat. Integer aliquam 
          mi quis accum san porta.');
-        $coment3->setParentComent($coment1);
+        $coment3->setParentComent($coment2);
 
         $manager->persist($coment1);
         $manager->persist($coment2);

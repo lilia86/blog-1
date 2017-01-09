@@ -2,8 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Post;
 use AppBundle\Entity\Coment;
+use AppBundle\Entity\PostPoint;
 use AppBundle\Form\ComentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,23 +20,34 @@ class ComentController extends Controller
      */
     public function idAction(Request $request, $id)
     {
-        $post = $this->getDoctrine()
-            ->getRepository('AppBundle:Post')
-            ->find($id);
+        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id);
         $user = $this->getUser();
         $coment = new Coment();
         $form = $this->createForm(ComentType::class, $coment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $coment->setUser($user);
-            $coment->setPost($post);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($coment);
-            $em->flush();
+            $this->get('app.dbManager')->save($coment, $user, $post);
         }
 
-        return $this->render('AppBundle:Pages:single.html.twig', array('blog' => $post, 'form' => $form->createView()));
+        if ($request->isXmlHttpRequest()) {
+            $user = $request->query->get('user');
+            $repeatedPoint = $this->getDoctrine()->getRepository('AppBundle:PostPoint')->findRepeatedPoint($user, $post);
+            if (!$repeatedPoint) {
+                $point = new PostPoint();
+                $this->get('app.dbManager')->save($point, $user, $post);
+            } else {
+                foreach ($repeatedPoint as $item) {
+                    $this->get('app.dbManager')->delete($item);
+                }
+            }
+            $points = $post->getPoints();
+            $points = count($points);
+
+            return $this->json(array('points' => $points));
+        }
+
+        return $this->render('AppBundle:Pages:single.html.twig', array('blog' => $post, 'name' => null, 'form' => $form->createView()));
     }
 
     /**
@@ -47,15 +58,12 @@ class ComentController extends Controller
      */
     public function updateComentAction(Request $request, $id)
     {
-        $coment = $this->getDoctrine()
-            ->getRepository('AppBundle:Coment')
-            ->find($id);
+        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($id);
         $form = $this->createForm(ComentType::class, $coment);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($coment);
-            $em->flush();
+            $this->get('app.dbManager')->update();
 
             return $this->redirectToRoute('homepage');
         }
@@ -63,5 +71,42 @@ class ComentController extends Controller
         return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * Delete coment.
+     *
+     * @Route("/delete_coment/{id}", name="delete_coment")
+     * @Method({"GET", "POST"})
+     */
+    public function deleteComentAction(Request $request, $id)
+    {
+        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($id);
+        $user = $this->getUser();
+        $comenter = $coment->getUser();
+
+        if ($user === $comenter) {
+            $this->get('app.dbManager')->delete($coment);
+        } else {
+            $this->addFlash(
+                'notice',
+                "Sorry You can't delete this coment!"
+            );
+        }
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * Sub coment.
+     *
+     * @Route("/sub_coment/{id}", name="sub_coment")
+     * @Method({"GET", "POST"})
+     */
+    public function subComentAction(Request $request, $id)
+    {
+        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($id);
+
+        return $this->render('AppBundle:Pages:childcoments.html.twig', array('coment' => $coment));
     }
 }

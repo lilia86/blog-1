@@ -1,5 +1,25 @@
 {% extends 'AppBundle::main.html.twig' %}
+{% block javascript %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $("#driver").click(function(event){
+                var url  = window.location.href;
+                $.getJSON(url, function(jd) {
+                    $('#points').html( jd.points );
+                });
 
+            });
+            $("#link_sub_coments").click(function(event){
+                var id = $("#coment_id").val();
+                var $loadContent = $("#subcoments") ;
+                var routeWithPlaceHolder= "{{ path('sub_coment', {'id': '_id_'}) }}" ;
+                var routeToLoad = routeWithPlaceHolder.replace("_id_",id) ;
+                $loadContent.load(routeToLoad) ;
+            });
+        });
+    </script>
+{% endblock %}
 {% block body %}
     <div class="single">
         <div class="container">
@@ -10,7 +30,8 @@
                     <ul class="blog-ic">
                         <li><a href="{{ path('author', {'slug': blog.getUser.getNickName }) }}"><span> <i  class="glyphicon glyphicon-user"> </i>{{ blog.getUser.getNickName }}</span> </a> </li>
                         <li><span><i class="glyphicon glyphicon-time"> </i>{{ blog.getCreatedAt|date('h:iA') }}</span></li>
-                        <li><span><i class="glyphicon glyphicon-eye-open"> </i>Hits:145</span></li>
+                        <li><span><i class="glyphicon glyphicon-heart" id = "driver"></i><span id = "points">{{ blog.getPoints|length }}</span></span></li>
+
                     </ul>
                     {% set tags=blog.getTags %}
                     <p>{%  for tag in tags %}
@@ -19,6 +40,7 @@
                     </p>
                     <p>{{ blog.body }}</p>
                     <p><time datetime="{{ blog.getCreatedAt|date('c') }}">{{ blog.getCreatedAt|date('l, F j, Y') }}</time></p>
+                    <p>Updated {{ blog.getUpdatedAt|timediff }}</p>
                 </div>
                 <div class="comments heading">
                     <h3>Comments</h3>
@@ -26,7 +48,8 @@
                     {%  for coment in coments %}
                         <div class="media">
                             <div class="media-body">
-                                <h4 class="media-heading"><a href="#">{{ coment.getUser.getNickName }}</a></h4>
+                                <h4 class="media-heading"><a href="#">{{ coment.getUser.getNickName }}</a>
+                                    <a href="{{ path('delete_coment', {'id': coment.getId }) }}", style="font-size:10px;">  Delete coment</a></h4>
                                 <p>{{ coment.getContent }}</p>
                             </div>
                             <div class="media-right">
@@ -34,25 +57,17 @@
                                     <img src="{{ asset('images/si.png') }}" alt=""> </a>
                             </div>
                         </div>
-                        {% set child_coments=coment.getChildComents %}
-                        {% if child_coments != null %}
-                        {%  for child_coment in child_coments %}
-                        <div class="media">
-                            <div class="media-left">
-                                <a href="#">
-                                    <img src="{{ asset('images/si.png') }}" alt="">
-                                </a>
-                            </div>
-                            <div class="media-body">
-                                <h4 class="media-heading">{{ child_coment.getUser.getNickName }}</h4>
-                                <p>{{ child_coment.getContent }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                        {% endif %}
+                        <div id = "link_sub_coments" style="font-size:10px;" >  Back comments ({{ coment.getChildComents|length }}) </div>
+                        <input type="text" id = "coment_id" value="{{ coment.getId }}" hidden>
+                        <div class="media" id = "subcoments" style="width: 95%; float: right"></div>
                     {% endfor %}
                 </div>
-                <div class="comment-bottom heading">
+                {% for flash_message in app.session.flashBag.get('notice') %}
+                    <div class="flash-notice">
+                        {{ flash_message }}
+                    </div>
+                {% endfor %}
+                <div class="comment-bottom heading" style="clear: both">
                     <h3>Leave a Comment</h3>
                         {{ form_start(form) }}
                         {{ form_widget(form) }}

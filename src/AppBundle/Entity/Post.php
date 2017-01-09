@@ -47,10 +47,25 @@ class Post extends ArticlesSuperClass
      */
     private $coments;
 
+    /**
+     * @var ArrayCollection
+     *                      One Post have Many Points
+     * @ORM\OneToMany(targetEntity="PostPoint", mappedBy="post", cascade={"persist", "remove"})
+     */
+    private $points;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="count", type="integer")
+     */
+    private $count = 0;
+
     public function __construct()
     {
         $this->coments = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->points = new ArrayCollection();
     }
 
     /**
@@ -134,5 +149,37 @@ class Post extends ArticlesSuperClass
     public function getComents()
     {
         return $this->coments;
+    }
+
+    /**
+     * Get coments.
+     *
+     * @return ArrayCollection
+     */
+    public function getPoints()
+    {
+        return $this->points;
+    }
+
+    /**
+     * Set count.
+     *
+     * @return Post
+     */
+    public function setCount()
+    {
+        $this->count = $this->count + 1;
+
+        return $this;
+    }
+
+    /**
+     * Get count.
+     *
+     * @return object
+     */
+    public function getCount()
+    {
+        return $this->count;
     }
 }

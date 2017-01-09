@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,17 +15,13 @@ class PagesController extends Controller
      * @Route("/", name="homepage")
      * @Template()
      */
-    public function indexAction(Request $request, $page = 1)
+    public function indexAction(Request $request)
     {
         $thisPage = $request->query->get('page');
-        if ($thisPage === null) {
-            $thisPage = $page;
-        }
         $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getAllPosts($thisPage);
-        $limit = 3;
-        $maxPages = ceil($posts->count() / $limit);
+        $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
 
-        return array('blogs' => $posts, 'slug' => '', 'maxPages' => $maxPages, 'thisPage' => $thisPage);
+        return array('blogs' => $posts, 'slug' => '', 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]);
     }
 
     /**
@@ -37,8 +32,8 @@ class PagesController extends Controller
      */
     public function sidebarAction()
     {
-        $news = $this->getDoctrine()->getRepository('AppBundle:News')->getFiveLastNews();
+        $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getFiveMostPopular();
 
-        return array('items' => $news);
+        return array('items' => $posts);
     }
 }

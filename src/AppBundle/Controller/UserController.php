@@ -2,9 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Post;
 use AppBundle\Entity\UserBloger;
-use AppBundle\Entity\User;
 use AppBundle\Form\UserBlogerType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,9 +24,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            $this->get('app.dbManager')->save($user);
 
             return $this->redirectToRoute('homepage');
         }
@@ -46,14 +42,12 @@ class UserController extends Controller
      */
     public function updateUserAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle:UserBloger')->find($id);
+        $user = $this->getDoctrine()->getRepository('AppBundle:UserBloger')->find($id);
         $form = $this->createForm(UserBlogerType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($user);
-            $em->flush();
+            $this->get('app.dbManager')->update();
 
             return $this->redirectToRoute('homepage');
         }
@@ -61,5 +55,21 @@ class UserController extends Controller
         return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * Delete user.
+     *
+     * @Route("/delete_user/{id}", name="delete_user")
+     * @Method({"GET", "POST"})
+     */
+    public function deleteUserAction(Request $request, $id)
+    {
+        $user = $this->getDoctrine()
+            ->getRepository('AppBundle:UserBloger')
+            ->find($id);
+        $this->get('app.dbManager')->delete($user);
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }

@@ -22,7 +22,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
         $user2->setNickName('bloger2');
         $user2->setFirstName('Alice');
         $user2->setPassword('test2');
-        $user1->setInformation($this->getReference('inf2'));
+        $user2->setInformation($this->getReference('inf2'));
 
         $user3 = new UserGuest();
         $user3->setNickName('some_user');

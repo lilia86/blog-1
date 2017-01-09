@@ -137,4 +137,14 @@ class UserBloger extends User
     {
         return $this->information;
     }
+
+    /**
+     * Get posts.
+     *
+     * @return array
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
 }
