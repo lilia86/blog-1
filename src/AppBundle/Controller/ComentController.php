@@ -31,20 +31,33 @@ class ComentController extends Controller
         }
 
         if ($request->isXmlHttpRequest()) {
-            $user = $request->query->get('user');
-            $repeatedPoint = $this->getDoctrine()->getRepository('AppBundle:PostPoint')->findRepeatedPoint($user, $post);
-            if (!$repeatedPoint) {
-                $point = new PostPoint();
-                $this->get('app.dbManager')->save($point, $user, $post);
-            } else {
-                foreach ($repeatedPoint as $item) {
-                    $this->get('app.dbManager')->delete($item);
-                }
-            }
+            $this->getDoctrine()->getRepository('AppBundle:PostPoint')->saveNotRepeatedPoint($user, $post);
             $points = $post->getPoints();
             $points = count($points);
 
             return $this->json(array('points' => $points));
+        }
+
+        return $this->render('AppBundle:Pages:single.html.twig', array('blog' => $post, 'name' => null, 'form' => $form->createView()));
+    }
+
+    /**
+     * Creating subcoment.
+     *
+     * @Route("/subcoment/{post_id}/{coment_id}", name="subcoment")
+     * @Method({"GET", "POST"})
+     */
+    public function createSubcomentAction(Request $request, $post_id, $coment_id)
+    {
+        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($post_id);
+        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($coment_id);
+        $user = $this->getUser();
+        $subcoment = new Coment();
+        $form = $this->createForm(ComentType::class, $coment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.dbManager')->save($subcoment, $user, $post, $coment);
         }
 
         return $this->render('AppBundle:Pages:single.html.twig', array('blog' => $post, 'name' => null, 'form' => $form->createView()));

@@ -1,4 +1,15 @@
 {% extends 'AppBundle::main.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        #link_sub_coments:hover {
+            color: cornflowerblue;
+        }
+        #link_child_coments:hover {
+            color: cornflowerblue;
+        }
+    </style>
+{% endblock %}
 {% block javascript %}
     {{ parent() }}
     <script>
