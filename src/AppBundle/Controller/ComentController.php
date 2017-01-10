@@ -113,7 +113,7 @@ class ComentController extends Controller
     {
         $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($post_id);
         $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($coment_id);
-        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find(2);
+        $user = $this->getUser();
         $subcoment = new Coment();
         $form = $this->createForm(ComentType::class, $subcoment);
         $form->handleRequest($request);
