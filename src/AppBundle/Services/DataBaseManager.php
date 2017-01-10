@@ -16,14 +16,22 @@ class DataBaseManager
         $this->em = $em;
     }
 
-    public function save($object, User $user, Post $post)
+    public function save($object, User $user, Post $post, Coment $coment = null)
     {
         if ($object instanceof Post) {
             $object->setUser($user);
         }
-        if ($object instanceof Coment || $object instanceof PostPoint) {
+        if ($object instanceof PostPoint) {
             $object->setUser($user);
             $object->setPost($post);
+        }
+        if ($object instanceof Coment) {
+            $object->setUser($user);
+            if($coment !== null) {
+                $object->setParentComent($coment);
+            }else{
+                $object->setPost($post);
+            }
         }
         $this->em->persist($object);
         $this->em->flush();

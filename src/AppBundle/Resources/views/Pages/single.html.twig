@@ -2,10 +2,13 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        #link_sub_coments:hover {
+        .subcoments:hover {
             color: cornflowerblue;
         }
         #link_child_coments:hover {
+            color: cornflowerblue;
+        }
+        .form_sub_coments:hover {
             color: cornflowerblue;
         }
     </style>
@@ -21,14 +24,26 @@
                 });
 
             });
-            $("#link_sub_coments").click(function(event){
-                var id = $("#coment_id").val();
-                var $loadContent = $("#subcoments") ;
-                var routeWithPlaceHolder= "{{ path('sub_coment', {'id': '_id_'}) }}" ;
-                var routeToLoad = routeWithPlaceHolder.replace("_id_",id) ;
+            $(".subcoments").click(function(event){
+                var coment_id = $(this).parent(".coments").find(".coment_id").val();
+                var post_id = $(this).parent(".coments").find(".post_id").val();
+                var $loadContent = $(this).parent(".coments").find("div.media");
+                var routeWithPlaceHolder= "{{ path('sub_coment', {'post_id': '_post_id_', 'coment_id': '_coment_id_'}) }}" ;
+                var route = routeWithPlaceHolder.replace("_post_id_",post_id) ;
+                var routeToLoad = route.replace("_coment_id_",coment_id) ;
+                $loadContent.load(routeToLoad) ;
+            });
+            $("span.form_sub_coments").click(function(event){
+                var coment_id = $(this).parent(".coments").find(".coment_id").val();
+                var post_id = $(this).parent(".coments").find(".post_id").val();
+                var $loadContent = $(this).parent(".coments").find("div.media");
+                var routeWithPlaceHolder= "{{ path('sub_coment_form', {'post_id': '_post_id_', 'coment_id': '_coment_id_'}) }}" ;
+                var route = routeWithPlaceHolder.replace("_post_id_",post_id) ;
+                var routeToLoad = route.replace("_coment_id_",coment_id) ;
                 $loadContent.load(routeToLoad) ;
             });
         });
+
     </script>
 {% endblock %}
 {% block body %}
@@ -57,7 +72,7 @@
                     <h3>Comments</h3>
                     {% set coments=blog.getComents %}
                     {%  for coment in coments %}
-                        <div class="media">
+                        <div class="media" style="clear: both">
                             <div class="media-body">
                                 <h4 class="media-heading"><a href="#">{{ coment.getUser.getNickName }}</a>
                                     <a href="{{ path('delete_coment', {'id': coment.getId }) }}", style="font-size:10px;">  Delete coment</a></h4>
@@ -68,9 +83,12 @@
                                     <img src="{{ asset('images/si.png') }}" alt=""> </a>
                             </div>
                         </div>
-                        <div id = "link_sub_coments" style="font-size:10px;" >  Back comments ({{ coment.getChildComents|length }}) </div>
-                        <input type="text" id = "coment_id" value="{{ coment.getId }}" hidden>
-                        <div class="media" id = "subcoments" style="width: 95%; float: right"></div>
+                        <div  class = "coments" style="font-size:10px;" ><span class = "subcoments" >  Back comments ({{ coment.getChildComents|length }})</span>
+                            <span class = "form_sub_coments">  Add subcomments </span>
+                        <input type="text" class = "coment_id" value="{{ coment.getId }}" hidden>
+                        <input type="text" class = "post_id" value="{{ coment.getPost.getId }}" hidden>
+                        <div class="media" style="width: 95%; float: right"></div>
+                        </div>
                     {% endfor %}
                 </div>
                 {% for flash_message in app.session.flashBag.get('notice') %}

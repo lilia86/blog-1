@@ -1,12 +1,21 @@
 <script>
-    $(document).ready(function() {
-        $("#link_child_coments").click(function(event){
-            var id = $("#child_coment_id").val();
-            var $loadContent = $("#childcoments") ;
-            var routeWithPlaceHolder= "{{ path('sub_coment', {'id': '_id_'}) }}" ;
-            var routeToLoad = routeWithPlaceHolder.replace("_id_",id) ;
-            $loadContent.load(routeToLoad) ;
-        });
+    $(".subcoments").click(function(event){
+        var coment_id = $(this).parent(".coments").find(".coment_id").val();
+        var post_id = $(this).parent(".coments").find(".post_id").val();
+        var $loadContent = $(this).parent(".coments").find("div.media");
+        var routeWithPlaceHolder= "{{ path('sub_coment', {'post_id': '_post_id_', 'coment_id': '_coment_id_'}) }}" ;
+        var route = routeWithPlaceHolder.replace("_post_id_",post_id) ;
+        var routeToLoad = route.replace("_coment_id_",coment_id) ;
+        $loadContent.load(routeToLoad) ;
+    });
+    $("span.form_sub_coments").click(function(event){
+        var coment_id = $(this).parent(".coments").find(".coment_id").val();
+        var post_id = $(this).parent(".coments").find(".post_id").val();
+        var $loadContent = $(this).parent(".coments").find("div.media");
+        var routeWithPlaceHolder= "{{ path('sub_coment_form', {'post_id': '_post_id_', 'coment_id': '_coment_id_'}) }}" ;
+        var route = routeWithPlaceHolder.replace("_post_id_",post_id) ;
+        var routeToLoad = route.replace("_coment_id_",coment_id) ;
+        $loadContent.load(routeToLoad) ;
     });
 </script>
 {% set child_coments=coment.getChildComents %}
@@ -24,8 +33,11 @@
                              style="font-size: 10px">  Delete coment</a></h4>
                       <p>{{ child_coment.getContent }}</p>
                   </div>
-              <div id = "link_child_coments" style="font-size:10px;" >  Back comments ({{ child_coment.getChildComents|length }}) </div>
-              <input type="text" id = "child_coment_id" value="{{ child_coment.getId }}" hidden>
-              <div class="media" id = "childcoments" style="width: 90%; float: right"></div>
+              <div  class = "coments" style="font-size:10px;" ><span class = "subcoments" >  Back comments ({{ child_coment.getChildComents|length }})</span>
+                  <span class = "form_sub_coments">  Add subcomments </span>
+                  <input type="text" class = "coment_id" value="{{ child_coment.getId }}" hidden>
+                  <input type="text" class = "post_id" value="{{ blog.getId }}" hidden>
+                  <div class="media" style="width: 95%; float: right"></div>
+              </div>
           {% endfor %}
       {% endif %}

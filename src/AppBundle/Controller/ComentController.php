@@ -41,27 +41,6 @@ class ComentController extends Controller
         return $this->render('AppBundle:Pages:single.html.twig', array('blog' => $post, 'name' => null, 'form' => $form->createView()));
     }
 
-    /**
-     * Creating subcoment.
-     *
-     * @Route("/subcoment/{post_id}/{coment_id}", name="subcoment")
-     * @Method({"GET", "POST"})
-     */
-    public function createSubcomentAction(Request $request, $post_id, $coment_id)
-    {
-        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($post_id);
-        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($coment_id);
-        $user = $this->getUser();
-        $subcoment = new Coment();
-        $form = $this->createForm(ComentType::class, $coment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.dbManager')->save($subcoment, $user, $post, $coment);
-        }
-
-        return $this->render('AppBundle:Pages:single.html.twig', array('blog' => $post, 'name' => null, 'form' => $form->createView()));
-    }
 
     /**
      * Update coment.
@@ -111,15 +90,39 @@ class ComentController extends Controller
     }
 
     /**
-     * Sub coment.
+     * Show subcoments.
      *
-     * @Route("/sub_coment/{id}", name="sub_coment")
+     * @Route("/sub_coment/{post_id}/{coment_id}", name="sub_coment")
      * @Method({"GET", "POST"})
      */
-    public function subComentAction(Request $request, $id)
+    public function subComentAction(Request $request, $post_id, $coment_id)
     {
-        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($id);
+        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($coment_id);
+        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($post_id);
 
-        return $this->render('AppBundle:Pages:childcoments.html.twig', array('coment' => $coment));
+        return $this->render('AppBundle:Pages:childcoments.html.twig', array('blog' => $post, 'coment' => $coment));
+    }
+
+    /**
+     * Creating subcoment.
+     *
+     * @Route("/sub_coment_form/{post_id}/{coment_id}", name="sub_coment_form")
+     * @Method({"GET", "POST"})
+     */
+    public function createSubcomentAction(Request $request, $post_id, $coment_id)
+    {
+        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($post_id);
+        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($coment_id);
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find(2);
+        $subcoment = new Coment();
+        $form = $this->createForm(ComentType::class, $subcoment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.dbManager')->save($subcoment, $user, $post, $coment);
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        return $this->render('AppBundle:Pages:childcomentform.html.twig', array('post' => $post_id, 'coment' => $coment_id, 'form' => $form->createView()));
     }
 }
