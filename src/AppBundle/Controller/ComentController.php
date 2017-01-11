@@ -45,7 +45,7 @@ class ComentController extends Controller
     /**
      * Update coment.
      *
-     * @Route("/update_coment/{id}", name="update_coment")
+     * @Route("/coment/update/{id}", name="update_coment")
      * @Method({"GET", "POST"})
      */
     public function updateComentAction(Request $request, $id)
@@ -68,7 +68,7 @@ class ComentController extends Controller
     /**
      * Delete coment.
      *
-     * @Route("/delete_coment/{id}", name="delete_coment")
+     * @Route("/coment/delete/{id}", name="delete_coment")
      * @Method({"GET", "POST"})
      */
     public function deleteComentAction(Request $request, $id)

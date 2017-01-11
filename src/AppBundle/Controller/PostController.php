@@ -15,7 +15,7 @@ class PostController extends Controller
     /**
          * Creates a new post entity.
          *
-         * @Route("/new_post", name="post_new")
+         * @Route("/post/create", name="post_new")
          * @Method({"GET", "POST"})
          */
         public function newPostAction(Request $request)
@@ -38,7 +38,7 @@ class PostController extends Controller
     /**
      * Update post entity.
      *
-     * @Route("/update_post/{id}", name="update_post")
+     * @Route("/post/update/{id}", name="update_post")
      * @Method({"GET", "POST"})
      */
     public function updatePostAction(Request $request, $id)
@@ -61,7 +61,7 @@ class PostController extends Controller
     /**
      * Delete post.
      *
-     * @Route("/delete_post/{id}", name="delete_post")
+     * @Route("/post/delete/{id}", name="delete_post")
      * @Method({"GET", "POST"})
      */
     public function deletePostAction(Request $request, $id)
@@ -75,7 +75,7 @@ class PostController extends Controller
     /**
      * Getting posts by category.
      *
-     * @Route("/category/{slug}", name="category")
+     * @Route("/post/category/{slug}", name="category")
      */
     public function categoryAction(Request $request, $slug)
     {
@@ -90,7 +90,7 @@ class PostController extends Controller
     /**
      * Getting posts by author.
      *
-     * @Route("/author/{slug}", name="author")
+     * @Route("/post/author/{slug}", name="author")
      */
     public function authorAction(Request $request, $slug)
     {
@@ -105,7 +105,7 @@ class PostController extends Controller
     /**
      * Getting posts by tag.
      *
-     * @Route("/tag/{slug}", name="tag")
+     * @Route("/post/tag/{slug}", name="tag")
      */
     public function tagAction(Request $request, $slug)
     {

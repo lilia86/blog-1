@@ -14,7 +14,7 @@ class UserController extends Controller
     /**
      * Creates a new user entity.
      *
-     * @Route("/new_user", name="user_new")
+     * @Route("/user/create", name="user_new")
      * @Method({"GET", "POST"})
      */
     public function newUserAction(Request $request)
@@ -37,7 +37,7 @@ class UserController extends Controller
     /**
      * Update a user entity.
      *
-     * @Route("/update_user/{id}", name="user_update")
+     * @Route("/user/update/{id}", name="user_update")
      * @Method({"GET", "POST"})
      */
     public function updateUserAction(Request $request, $id)
@@ -60,7 +60,7 @@ class UserController extends Controller
     /**
      * Delete user.
      *
-     * @Route("/delete_user/{id}", name="delete_user")
+     * @Route("/user/delete/{id}", name="delete_user")
      * @Method({"GET", "POST"})
      */
     public function deleteUserAction(Request $request, $id)
