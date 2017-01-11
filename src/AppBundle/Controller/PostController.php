@@ -3,11 +3,15 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Post;
+use AppBundle\Entity\PostTag;
+use AppBundle\Entity\User;
+use AppBundle\Entity\PostCategory;
 use Doctrine\Common\Collections\Criteria;
 use AppBundle\Form\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 class PostController extends Controller
@@ -40,10 +44,10 @@ class PostController extends Controller
      *
      * @Route("/post/update/{id}", name="update_post")
      * @Method({"GET", "POST"})
+     * @ParamConverter("post", class="AppBundle:Post")
      */
-    public function updatePostAction(Request $request, $id)
+    public function updatePostAction(Request $request, Post $post)
     {
-        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -62,11 +66,11 @@ class PostController extends Controller
      * Delete post.
      *
      * @Route("/post/delete/{id}", name="delete_post")
-     * @Method({"GET", "POST"})
+     * @Method({"POST"})
+     * @ParamConverter("post", class="AppBundle:Post")
      */
-    public function deletePostAction(Request $request, $id)
-    {
-        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id);
+    public function deletePostAction(Request $request, Post $post)    {
+
         $this->get('app.dbManager')->delete($post);
 
         return $this->redirect($request->headers->get('referer'));
@@ -76,12 +80,12 @@ class PostController extends Controller
      * Getting posts by category.
      *
      * @Route("/post/category/{slug}", name="category")
+     * @ParamConverter("category", options={"mapping": {"slug": "description"}})
      */
-    public function categoryAction(Request $request, $slug)
+    public function categoryAction(Request $request, PostCategory $category, $slug)
     {
         $thisPage = $request->query->get('page');
-        $category = $this->getDoctrine()->getRepository('AppBundle:PostCategory')->findCategoryByName($slug);
-        $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getPostsByCategory($category[0], $thisPage);
+        $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getPostsByCategory($category, $thisPage);
         $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
 
         return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'slug' => $slug, 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]));
@@ -91,12 +95,12 @@ class PostController extends Controller
      * Getting posts by author.
      *
      * @Route("/post/author/{slug}", name="author")
+     * @ParamConverter("user", options={"mapping": {"slug": "nickName"}})
      */
-    public function authorAction(Request $request, $slug)
+    public function authorAction(Request $request, User $user, $slug)
     {
         $thisPage = $request->query->get('page');
-        $author = $this->getDoctrine()->getRepository('AppBundle:UserBloger')->findUserByName($slug);
-        $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getPostsByUser($author[0], $thisPage);
+        $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getPostsByUser($user, $thisPage);
         $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
 
         return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'slug' => $slug, 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]));
@@ -106,12 +110,12 @@ class PostController extends Controller
      * Getting posts by tag.
      *
      * @Route("/post/tag/{slug}", name="tag")
+     * @ParamConverter("postTag", options={"mapping": {"slug": "name"}})
      */
-    public function tagAction(Request $request, $slug)
+    public function tagAction(Request $request, PostTag $postTag, $slug)
     {
         $thisPage = $request->query->get('page');
-        $tag = $this->getDoctrine()->getRepository('AppBundle:PostTag')->findTagByName($slug);
-        $posts = $tag[0]->getPosts();
+        $posts = $postTag->getPosts();
         $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
         $criteria = Criteria::create()->orderBy(array('id' => Criteria::DESC))->setFirstResult($pagesParameters[2] * ($thisPage - 1))->setMaxResults($pagesParameters[2]);
         $match_posts = $posts->matching($criteria);

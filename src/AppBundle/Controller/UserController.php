@@ -2,25 +2,51 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use AppBundle\Entity\UserBloger;
-use AppBundle\Form\UserBlogerType;
+use AppBundle\Entity\UserGuest;
+use AppBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends Controller
 {
     /**
-     * Creates a new user entity.
+     * Creates a new userBloger entity.
      *
-     * @Route("/user/create", name="user_new")
+     * @Route("/user/create", name="user_bloger_new")
      * @Method({"GET", "POST"})
      */
-    public function newUserAction(Request $request)
+    public function newUserBlogerAction(Request $request)
     {
         $user = new UserBloger();
-        $form = $this->createForm(UserBlogerType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.dbManager')->save($user);
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('AppBundle:Pages:form.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * Creates a new userGuest entity.
+     *
+     * @Route("/user/create", name="user_guest_new")
+     * @Method({"GET", "POST"})
+     */
+    public function newUserGuestAction(Request $request)
+    {
+        $user = new UserGuest();
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -39,11 +65,11 @@ class UserController extends Controller
      *
      * @Route("/user/update/{id}", name="user_update")
      * @Method({"GET", "POST"})
+     * @ParamConverter("user", class="AppBundle:User")
      */
-    public function updateUserAction(Request $request, $id)
+    public function updateUserAction(Request $request, User $user)
     {
-        $user = $this->getDoctrine()->getRepository('AppBundle:UserBloger')->find($id);
-        $form = $this->createForm(UserBlogerType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -61,13 +87,11 @@ class UserController extends Controller
      * Delete user.
      *
      * @Route("/user/delete/{id}", name="delete_user")
-     * @Method({"GET", "POST"})
+     * @Method({"POST"})
+     * @ParamConverter("user", class="AppBundle:User")
      */
-    public function deleteUserAction(Request $request, $id)
+    public function deleteUserAction(Request $request, User $user)
     {
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:UserBloger')
-            ->find($id);
         $this->get('app.dbManager')->delete($user);
 
         return $this->redirect($request->headers->get('referer'));

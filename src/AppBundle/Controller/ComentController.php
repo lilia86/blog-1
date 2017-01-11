@@ -3,11 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Coment;
-use AppBundle\Entity\PostPoint;
+use AppBundle\Entity\Post;
 use AppBundle\Form\ComentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 class ComentController extends Controller
@@ -17,10 +18,10 @@ class ComentController extends Controller
      *
      * @Route("/id/{id}", name="id")
      * @Method({"GET", "POST"})
+     * @ParamConverter("post", class="AppBundle:Post")
      */
-    public function idAction(Request $request, $id)
+    public function idAction(Request $request, Post $post)
     {
-        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id);
         $user = $this->getUser();
         $coment = new Coment();
         $form = $this->createForm(ComentType::class, $coment);
@@ -47,10 +48,10 @@ class ComentController extends Controller
      *
      * @Route("/coment/update/{id}", name="update_coment")
      * @Method({"GET", "POST"})
+     * @ParamConverter("coment", class="AppBundle:Coment")
      */
-    public function updateComentAction(Request $request, $id)
+    public function updateComentAction(Request $request, Coment $coment)
     {
-        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($id);
         $form = $this->createForm(ComentType::class, $coment);
         $form->handleRequest($request);
 
@@ -69,11 +70,11 @@ class ComentController extends Controller
      * Delete coment.
      *
      * @Route("/coment/delete/{id}", name="delete_coment")
-     * @Method({"GET", "POST"})
+     * @Method({"POST"})
+     * @ParamConverter("coment", class="AppBundle:Coment")
      */
-    public function deleteComentAction(Request $request, $id)
+    public function deleteComentAction(Request $request, Coment $coment)
     {
-        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($id);
         $user = $this->getUser();
         $comenter = $coment->getUser();
 
@@ -94,12 +95,11 @@ class ComentController extends Controller
      *
      * @Route("/sub_coment/{post_id}/{coment_id}", name="sub_coment")
      * @Method({"GET", "POST"})
+     * @ParamConverter("post", options={"id" = "post_id"})
+     * @ParamConverter("coment", options={"id" = "coment_id"})
      */
-    public function subComentAction(Request $request, $post_id, $coment_id)
+    public function subComentAction(Request $request, Post $post, Coment $coment)
     {
-        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($coment_id);
-        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($post_id);
-
         return $this->render('AppBundle:Pages:childcoments.html.twig', array('blog' => $post, 'coment' => $coment));
     }
 
@@ -108,11 +108,11 @@ class ComentController extends Controller
      *
      * @Route("/sub_coment_form/{post_id}/{coment_id}", name="sub_coment_form")
      * @Method({"GET", "POST"})
+     * @ParamConverter("post", options={"id" = "post_id"})
+     * @ParamConverter("coment", options={"id" = "coment_id"})
      */
-    public function createSubcomentAction(Request $request, $post_id, $coment_id)
+    public function createSubcomentAction(Request $request, Post $post, Coment $coment)
     {
-        $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($post_id);
-        $coment = $this->getDoctrine()->getRepository('AppBundle:Coment')->find($coment_id);
         $user = $this->getUser();
         $subcoment = new Coment();
         $form = $this->createForm(ComentType::class, $subcoment);
@@ -123,6 +123,6 @@ class ComentController extends Controller
             return $this->redirect($request->headers->get('referer'));
         }
 
-        return $this->render('AppBundle:Pages:childcomentform.html.twig', array('post' => $post_id, 'coment' => $coment_id, 'form' => $form->createView()));
+        return $this->render('AppBundle:Pages:childcomentform.html.twig', array('post' => $post, 'coment' => $coment, 'form' => $form->createView()));
     }
 }

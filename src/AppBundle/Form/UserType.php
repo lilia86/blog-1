@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\UserBloger;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -11,7 +12,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserBlogerType extends AbstractType
+class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -35,8 +36,8 @@ class UserBlogerType extends AbstractType
                 'required' => true,
                 'label' => 'password',
 
-            ])
-            ->add('information', UserDataType::class);
+            ]);
+
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $user = $event->getData();
@@ -44,13 +45,16 @@ class UserBlogerType extends AbstractType
             if ($user->getId()) {
                 $form->remove('nickName');
             }
+            if ($user instanceof UserBloger){
+                $form->add('information', UserDataType::class);
+            }
         });
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => UserBloger::class,
+            'data_class' => User::class,
 
         ));
     }

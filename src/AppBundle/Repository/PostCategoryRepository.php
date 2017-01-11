@@ -12,11 +12,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class PostCategoryRepository extends EntityRepository
 {
-    public function findCategoryByName($slug)
-    {
-        $query = $this->getEntityManager()->createQuery('SELECT c FROM AppBundle:PostCategory c WHERE c.description = :name');
-        $query->setParameters(array('name' => $slug));
 
-        return $query->getResult();
-    }
 }

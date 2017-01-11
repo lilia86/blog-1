@@ -10,11 +10,5 @@ namespace AppBundle\Repository;
  */
 class UserBlogerRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findUserByName($slug)
-    {
-        $query = $this->getEntityManager()->createQuery('SELECT c FROM AppBundle:UserBloger c WHERE c.nickName = :name');
-        $query->setParameters(array('name' => $slug));
 
-        return $query->getResult();
-    }
 }
