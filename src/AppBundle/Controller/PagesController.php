@@ -80,9 +80,10 @@ class PagesController extends Controller
      */
     public function adminAction()
     {
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
         $post = $this->getDoctrine()->getRepository('AppBundle:Post')->findAll();
         $category = $this->getDoctrine()->getRepository('AppBundle:PostCategory')->findAll();
         $tag = $this->getDoctrine()->getRepository('AppBundle:PostTag')->findAll();
-        return array('post' => $post, 'tag' => $tag, 'category' => $category);
+        return array('user' => $user, 'post' => $post, 'tag' => $tag, 'category' => $category);
     }
 }

@@ -25,7 +25,15 @@
             $(".form-control").click(function(event){
                 var id = $(this).val();
                 var rout = $(this).parent(".menu_item").find(".rout").val();
-                if (rout == 'category') {
+                if (rout == 'user') {
+                    var routeWithPlaceHolderUp= "{{ path('user_update', {'id': '_id_'}) }}";
+                    var routeWithPlaceHolderDel= "{{ path('delete_user', {'id': '_id_'}) }}";
+                }
+                if (rout == 'post') {
+                    var routeWithPlaceHolderUp= "{{ path('update_post', {'id': '_id_'}) }}";
+                    var routeWithPlaceHolderDel= "{{ path('delete_post', {'id': '_id_'}) }}";
+                }
+                else if (rout == 'category') {
                     var routeWithPlaceHolderUp= "{{ path('category_update', {'id': '_id_'}) }}";
                     var routeWithPlaceHolderDel= "{{ path('delete_category', {'id': '_id_'}) }}";
                 }
@@ -88,6 +96,20 @@
     <!--about-starts-->
     <div class="about">
         <div class="container">
+            <div class="menu_item">
+                <label for="sel">User</label>
+                <select class="form-control" id="sel">
+                    {% for item in user %}
+                        <option value="{{ item.getId }}">{{ item.getUsername }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" class = "rout" value="user" hidden>
+
+                <ul>
+                    <li class="update"><a href="{{ path('user_update', {'id': 1}) }}">Update</a></li>
+                    <li class="delete"><a href="{{ path('delete_user', {'id': 1}) }}">Delete</a></li>
+                </ul>
+            </div>
             <div class="menu_item">
                 <label for="sel">Post</label>
                 <select class="form-control" id="sel">

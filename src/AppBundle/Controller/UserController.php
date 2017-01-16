@@ -55,6 +55,10 @@ class UserController extends Controller
      */
     public function updateUserAction(Request $request, User $user)
     {
+        if (!($this->getUser() == $user ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -73,13 +77,27 @@ class UserController extends Controller
      * Delete user.
      *
      * @Route("/user/delete/{id}", name="delete_user")
-     * @Method({"POST"})
+     * @Method({"GET", "POST"})
      * @ParamConverter("user", class="AppBundle:User")
      */
     public function deleteUserAction(Request $request, User $user)
     {
-        $this->get('app.dbManager')->delete($user);
+        if (!($this->getUser() == $user ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
-        return $this->redirect($request->headers->get('referer'));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.dbManager')->delete($user);
+
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        return $this->render('AppBundle:Pages:form.html.twig', array(
+            'form' => $form->createView(),
+        ));
+
     }
 }
