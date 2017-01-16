@@ -29,7 +29,7 @@
                   </div>
                   <div class="media-body">
                       <h4 class="media-heading">{{ child_coment.getUser.getUsername }}
-                          {% if is_granted('edit', coment) %}
+                          {% if is_granted('edit', coment) or is_granted('ROLE_ADMIN') %}
                           <a href="{{ path('delete_coment', {'id': child_coment.getId }) }}"
                              style="font-size: 10px">  Delete coment</a></h4>
                           {% endif %}

@@ -51,7 +51,8 @@ class ComentController extends Controller
      */
     public function updateComentAction(Request $request, Coment $coment)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('edit', $coment)) {
+        if (!($this->get('security.authorization_checker')->isGranted('edit', $coment) ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(ComentType::class, $coment);
@@ -72,17 +73,31 @@ class ComentController extends Controller
      * Delete coment.
      *
      * @Route("/coment/delete/{id}", name="delete_coment")
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @ParamConverter("coment", class="AppBundle:Coment")
      */
     public function deleteComentAction(Request $request, Coment $coment)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('edit', $coment)) {
+        if (!($this->get('security.authorization_checker')->isGranted('edit', $coment) ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
         $this->get('app.dbManager')->delete($coment);
 
-        return $this->redirect($request->headers->get('referer'));
+        $form = $this->createForm(ComentType::class, $coment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.dbManager')->update();
+
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        return $this->render('AppBundle:Pages:form.html.twig', array(
+            'form' => $form->createView(),
+        ));
+
+
     }
 
     /**
