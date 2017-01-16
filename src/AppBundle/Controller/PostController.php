@@ -24,12 +24,16 @@ class PostController extends Controller
          */
         public function newPostAction(Request $request)
         {
+            if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER_BLOGER')) {
+                throw $this->createAccessDeniedException();
+            }
             $post = new Post();
             $form = $this->createForm(PostType::class, $post);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->get('app.dbManager')->save($post);
+                $user = $this->getUser();
+                $this->get('app.dbManager')->save($post, $user);
 
                 return $this->redirectToRoute('homepage');
             }
@@ -48,6 +52,9 @@ class PostController extends Controller
      */
     public function updatePostAction(Request $request, Post $post)
     {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $post)) {
+            throw $this->createAccessDeniedException();
+        }
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -66,14 +73,18 @@ class PostController extends Controller
      * Delete post.
      *
      * @Route("/post/delete/{id}", name="delete_post")
-     * @Method({"POST"})
+     * @Method({"GET"})
      * @ParamConverter("post", class="AppBundle:Post")
      */
-    public function deletePostAction(Request $request, Post $post)    {
+    public function deletePostAction(Request $request, Post $post)
+    {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $post)) {
+            throw $this->createAccessDeniedException();
+        }
 
         $this->get('app.dbManager')->delete($post);
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToRoute('homepage');
     }
 
     /**
@@ -95,7 +106,7 @@ class PostController extends Controller
      * Getting posts by author.
      *
      * @Route("/post/author/{slug}", name="author")
-     * @ParamConverter("user", options={"mapping": {"slug": "nickName"}})
+     * @ParamConverter("user", options={"mapping": {"slug": "username"}})
      */
     public function authorAction(Request $request, User $user, $slug)
     {

@@ -18,10 +18,15 @@
     <script>
         $(document).ready(function() {
             $("#driver").click(function(event){
-                var url  = window.location.href;
-                $.getJSON(url, function(jd) {
-                    $('#points').html( jd.points );
-                });
+                if ({{ is_granted('IS_AUTHENTICATED_FULLY') }}) {
+                    var url = window.location.href;
+                    $.getJSON(url, function (jd) {
+                        $('#points').html(jd.points);
+                    });
+                }
+                else{
+                    alert("Login to add your like");
+                }
 
             });
             $(".subcoments").click(function(event){
@@ -50,11 +55,11 @@
     <div class="single">
         <div class="container">
             <div class="single-top">
-                <a href="#"><img class="img-responsive" src="{{ asset('images/single-1.jpg') }}" alt=" "></a>
+                <a href="#"><img class="img-responsive" src="{{ asset(blog.getImage) }}" alt=" "></a>
                 <div class=" single-grid">
                     <h4>{{ blog.title }}</h4>
                     <ul class="blog-ic">
-                        <li><a href="{{ path('author', {'slug': blog.getUser.getNickName }) }}"><span> <i  class="glyphicon glyphicon-user"> </i>{{ blog.getUser.getNickName }}</span> </a> </li>
+                        <li><a href="{{ path('author', {'slug': blog.getUser.getUsername }) }}"><span> <i  class="glyphicon glyphicon-user"> </i>{{ blog.getUser.getUsername }}</span> </a> </li>
                         <li><span><i class="glyphicon glyphicon-time"> </i>{{ blog.getCreatedAt|date('h:iA') }}</span></li>
                         <li><span><i class="glyphicon glyphicon-heart" id = "driver"></i><span id = "points">{{ blog.getPoints|length }}</span></span></li>
 
@@ -66,7 +71,12 @@
                     </p>
                     <p>{{ blog.body }}</p>
                     <p><time datetime="{{ blog.getCreatedAt|date('c') }}">{{ blog.getCreatedAt|date('l, F j, Y') }}</time></p>
-                    <p>Updated {{ blog.getUpdatedAt|timediff }}</p>
+                    <p><span>Updated {{ blog.getUpdatedAt|timediff }}</span><br/>
+                        {% if is_granted('edit', blog) %}
+                        <a href="{{ path('update_post', {'id': blog.getId }) }}">Update this post</a><br/>
+                            <a href="{{ path('delete_post', {'id': blog.getId }) }}">Delete this post</a>
+                         {% endif %}
+                            </p>
                 </div>
                 <div class="comments heading">
                     <h3>Comments</h3>
@@ -74,8 +84,11 @@
                     {%  for coment in coments %}
                         <div class="media" style="clear: both">
                             <div class="media-body">
-                                <h4 class="media-heading"><a href="#">{{ coment.getUser.getNickName }}</a>
-                                    <a href="{{ path('delete_coment', {'id': coment.getId }) }}", style="font-size:10px;">  Delete coment</a></h4>
+                                <h4 class="media-heading"><a href="#">{{ coment.getUser.getUsername }}</a>
+                                {% if is_granted('edit', coment) %}
+                                    <a href="{{ path('delete_coment', {'id': coment.getId }) }}", style="font-size:10px;">  Delete coment</a>
+                                {% endif %}
+                                </h4>
                                 <p>{{ coment.getContent }}</p>
                             </div>
                             <div class="media-right">
@@ -83,19 +96,17 @@
                                     <img src="{{ asset('images/si.png') }}" alt=""> </a>
                             </div>
                         </div>
-                        <div  class = "coments" style="font-size:10px;" ><span class = "subcoments" >  Back comments ({{ coment.getChildComents|length }})</span>
+                        <div  class = "coments" style="font-size:10px;" ><span class = "subcoments" >  Comments to({{ coment.getChildComents|length }})</span>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <span class = "form_sub_coments">  Add subcomments </span>
+                        {% endif %}
                         <input type="text" class = "coment_id" value="{{ coment.getId }}" hidden>
                         <input type="text" class = "post_id" value="{{ coment.getPost.getId }}" hidden>
                         <div class="media" style="width: 95%; float: right"></div>
                         </div>
                     {% endfor %}
                 </div>
-                {% for flash_message in app.session.flashBag.get('notice') %}
-                    <div class="flash-notice">
-                        {{ flash_message }}
-                    </div>
-                {% endfor %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <div class="comment-bottom heading" style="clear: both">
                     <h3>Leave a Comment</h3>
                         {{ form_start(form) }}
@@ -103,8 +114,10 @@
                         <input type="submit" value="Create"
                                class="btn btn-default pull-right" />
                         {{ form_end(form) }}
-
                 </div>
+                {% else %}
+                    <p style="clear: both" ><a href="{{ path('login') }}">Please login to leave you coment</a></p>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -92,4 +92,9 @@ class UserGuest extends User
     {
         return $this->lastName;
     }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER_GUEST');
+    }
 }

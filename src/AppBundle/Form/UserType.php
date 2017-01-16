@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\UserBloger;
 use AppBundle\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -17,35 +18,40 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nickName', TextType::class, [
+            ->add('username', TextType::class, [
                 'required' => true,
-                'label' => 'NickName',
+                'label' => 'User Name',
 
             ])
             ->add('firstName', TextType::class, [
                 'required' => false,
-                'label' => 'Name',
+                'label' => 'First Name',
 
             ])
             ->add('lastName', TextType::class, [
                 'required' => false,
-                'label' => 'lastName',
+                'label' => 'Last Name',
 
             ])
             ->add('password', PasswordType::class, [
                 'required' => true,
                 'label' => 'password',
 
-            ]);
-
+            ])
+            ->add('email', EmailType::class, [
+                'required' => true,
+                'label' => 'Email',
+                'attr' => ['class' => 'test col-xs-6'],
+            ])
+        ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $user = $event->getData();
             $form = $event->getForm();
             if ($user->getId()) {
-                $form->remove('nickName');
+                $form->remove('username');
             }
-            if ($user instanceof UserBloger){
+            if ($user instanceof UserBloger) {
                 $form->add('information', UserDataType::class);
             }
         });

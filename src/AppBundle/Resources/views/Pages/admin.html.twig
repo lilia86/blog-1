@@ -1,0 +1,104 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/bootstrap.css') }}" rel='stylesheet' type='text/css' />
+    <link href="{{ asset('css/style.css') }}" rel='stylesheet' type='text/css' />
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/move-top.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/easing.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $(".scroll").click(function(event){
+                event.preventDefault();
+                $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+            });
+            $("#sel_cat").click(function(event){
+                var id = $("#sel_cat").val();
+                var routeWithPlaceHolderCat= "{{ path('category_update', {'id': '_id_'}) }}";
+                var routetoLoadCat = routeWithPlaceHolderCat.replace("_id_",id);
+                $('#cat_update').html("<a href='" + routetoLoadCat + "'>Update</a>");
+                var routeWithPlaceHolderDel= "{{ path('delete_category', {'id': '_id_'}) }}";
+                var routetoLoadDel = routeWithPlaceHolderDel.replace("_id_",id);
+                $('#cat_delete').html("<a href='" + routetoLoadDel + "'>Update</a>");
+
+            });
+            $("span.menu").click(function(){
+                $(" ul.navig").slideToggle("slow" , function(){
+                });
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block navigation %}
+    <!--header-top-starts-->
+    <div class="header-top">
+        <div class="container">
+            <div class="head-main">
+                <a href="{{ path('homepage') }}"><img src="{{ asset('images/logo-1.png') }}" alt="" /></a>
+                <div style="position:absolute; top: 10px; right: 10%; text-align: left">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <p>Hi {{ app.user.username }}</p>
+                        {% if is_granted('ROLE_ADMIN') == false %}
+                            <a href="{{ path('user_update', {'id': app.user.getId}) }}">Update your profile</a><br/>
+                        {% endif %}
+                        <a href="{{ path('logout') }}">Log out</a>
+                    {% else %}
+                        <a href="{{ path('login') }}">Log in</a><br/>
+                        <a href="{{ path('registry') }}">Registration</a><br/>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--header-top-end-->
+
+    <!--start-header-->
+    <div class="header">
+        <div class="container">
+            <div class="head">
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <!--about-starts-->
+    <div class="about">
+        <div class="container">
+            <div style="width: 20%">
+            <label for="sel_cat">Category</label>
+            <select class="form-control" id="sel_cat">
+                {% for item in category %}
+                <option value="{{ item.getId }}">{{ item.getDescription }}</option>
+                {% endfor %}
+            </select>
+            <ul>
+                <li><a href='{{ path("category_new") }}'>Create</a></li>
+                <li><a href="{{ path('category_update', {'id': 1}) }}" id="cat_update">Update</a></li>
+                <li><a href="{{ path('delete_category', {'id': 1}) }}" id="cat_delete">Delete</a></li>
+            </ul>
+            </div>
+        </div>
+    </div>
+    <!--about-end-->
+
+{% endblock %}
+
+{% block footer %}
+    <!--footer-starts-->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-text">
+                <p>© 2015 Coffee Break. All Rights Reserved | Design by Jckjd</a> </p>
+            </div>
+        </div>
+    </div>
+    <!--footer-end-->
+{% endblock %}

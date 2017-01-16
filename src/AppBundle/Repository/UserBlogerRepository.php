@@ -10,5 +10,4 @@ namespace AppBundle\Repository;
  */
 class UserBlogerRepository extends \Doctrine\ORM\EntityRepository
 {
-
 }

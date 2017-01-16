@@ -63,6 +63,7 @@ class UserBloger extends User
 
     public function __construct()
     {
+        parent::__construct();
         $this->posts = new ArrayCollection();
     }
 
@@ -146,5 +147,10 @@ class UserBloger extends User
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER_BLOGER');
     }
 }

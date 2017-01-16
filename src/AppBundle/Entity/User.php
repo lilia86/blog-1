@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -10,13 +11,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * User.
  *
  * @ORM\Entity
- * @UniqueEntity("nickName")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @UniqueEntity("username")
  * @ORM\Table(name="user")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="role", type="string")
  * @ORM\DiscriminatorMap( {"user" = "User", "bloger" = "UserBloger", "guest" = "UserGuest"} )
  */
-abstract class User
+abstract class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @var int
@@ -35,9 +37,9 @@ abstract class User
      *      min = 2,
      *      max = 45
      * )
-     * @ORM\Column(name="nick_name", type="string", length=45, unique=true)
+     * @ORM\Column(name="user_name", type="string", length=45, unique=true)
      */
-    private $nickName;
+    private $username;
 
     /**
      * @var string
@@ -49,6 +51,29 @@ abstract class User
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
+
+    /**
+     * @var string
+     * @Assert\Email(
+     *     checkMX = true
+     * )
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *      max = 250
+     * )
+     * @ORM\Column(name="email", type="string", length=250)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    public function __construct()
+    {
+        $this->isActive = true;
+    }
 
     /**
      * Get id.
@@ -63,13 +88,13 @@ abstract class User
     /**
      * Set nickName.
      *
-     * @param string $nickName
+     * @param string $username
      *
      * @return User
      */
-    public function setNickName($nickName)
+    public function setUsername($username)
     {
-        $this->nickName = $nickName;
+        $this->username = $username;
 
         return $this;
     }
@@ -79,9 +104,9 @@ abstract class User
      *
      * @return string
      */
-    public function getNickName()
+    public function getUsername()
     {
-        return $this->nickName;
+        return $this->username;
     }
 
     /**
@@ -106,5 +131,83 @@ abstract class User
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set email.
+     *
+     * @param string $email
+     *
+     * @return UserData
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    public function getRoles()
+    {
+    }
+
+    public function getSalt()
+    {
+    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->isActive,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->isActive
+            ) = unserialize($serialized);
     }
 }

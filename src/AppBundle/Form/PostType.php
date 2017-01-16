@@ -23,7 +23,7 @@ class PostType extends AbstractType
             ->add('user', EntityType::class, array(
                 'class' => 'AppBundle:UserBloger',
                 'label' => 'Author',
-                'choice_label' => 'nickName',
+                'choice_label' => 'username',
                 'disabled' => true,
             ))
             ->add('title', TextType::class, [
@@ -37,7 +37,7 @@ class PostType extends AbstractType
                 'attr' => ['class' => 'test col-xs-6'],
             ])
             ->add('image', FileType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Image',
                 'attr' => ['class' => 'test col-xs-6'],
             ])

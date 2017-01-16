@@ -11,52 +11,38 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserController extends Controller
 {
     /**
-     * Creates a new userBloger entity.
+     * Creates a new user entity.
      *
-     * @Route("/user/create", name="user_bloger_new")
+     * @Route("/user/create/{slug}", name="user_new")
      * @Method({"GET", "POST"})
      */
-    public function newUserBlogerAction(Request $request)
+    public function newUserBlogerAction(Request $request, $slug)
     {
-        $user = new UserBloger();
+        if ($slug == 'guest') {
+            $user = new UserGuest();
+        } else {
+            $user = new UserBloger();
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('app.dbManager')->save($user);
+            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+            $this->get('security.token_storage')->setToken($token);
+            $this->get('session')->set('_security_main', serialize($token));
 
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('AppBundle:Pages:form.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * Creates a new userGuest entity.
-     *
-     * @Route("/user/create", name="user_guest_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newUserGuestAction(Request $request)
-    {
-        $user = new UserGuest();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.dbManager')->save($user);
-
-            return $this->redirectToRoute('homepage');
-        }
-
-        return $this->render('AppBundle:Pages:form.html.twig', array(
-            'form' => $form->createView(),
+        return $this->render('AppBundle:Pages:registryform.html.twig', array(
+            'form' => $form->createView(), 'slug' => $slug,
         ));
     }
 

@@ -13,21 +13,24 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $user1 = new UserBloger();
-        $user1->setNickName('bloger1');
+        $user1->setUsername('bloger1');
         $user1->setFirstName('John');
-        $user1->setPassword('test1');
+        $user1->setPassword('$2y$13$TH3luMzipFzY7IyKtN9tquzFP7raJ7K6PucJD6kY02ueGTbw786Pu');
+        $user1->setEmail('john@gmail.com');
         $user1->setInformation($this->getReference('inf1'));
 
         $user2 = new UserBloger();
-        $user2->setNickName('bloger2');
+        $user2->setUsername('bloger2');
         $user2->setFirstName('Alice');
-        $user2->setPassword('test2');
+        $user2->setPassword('$2y$13$a9ypWxFOfd6jrYmumtpymOVd/BTZoXp2yXIQnln.2AaAUKjXHBnt6');
+        $user2->setEmail('alice@gmail.com');
         $user2->setInformation($this->getReference('inf2'));
 
         $user3 = new UserGuest();
-        $user3->setNickName('some_user');
+        $user3->setUsername('some_user');
         $user3->setFirstName('Nick');
-        $user3->setPassword('test3');
+        $user3->setPassword('$2y$13$DPZCcjZPcEgx.CDvDfzy3.KDp6pz1d5yqj2qtBFGnxm.Suwv2ghqW');
+        $user3->setEmail('nick@gmail.com');
 
         $manager->persist($user1);
         $manager->persist($user2);

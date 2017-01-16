@@ -33,6 +33,21 @@
         <div class="container">
             <div class="head-main">
                 <a href="{{ path('homepage') }}"><img src="{{ asset('images/logo-1.png') }}" alt="" /></a>
+                <div style="position:absolute; top: 10px; right: 10%; text-align: left">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <p>Hi {{ app.user.username }}</p>
+                    {% if is_granted('ROLE_ADMIN') == false %}
+                        <a href="{{ path('user_update', {'id': app.user.getId}) }}">Update your profile</a><br/>
+                    {% else %}
+                        <a href="{{ path('admin') }}">Admin page</a><br/>
+                    {% endif %}
+                        <a href="{{ path('logout') }}">Log out</a>
+                    {% else %}
+                        <a href="{{ path('login') }}">Log in</a><br/>
+                        <a href="{{ path('registry') }}">Registration</a><br/>
+                    {% endif %}
+
+                </div>
             </div>
         </div>
     </div>
@@ -53,19 +68,16 @@
                         <li><a href="{{ path('category', {'slug': 'history'}) }}">History</a></li>
                     </ul>
                 </div>
+                {% if is_granted('ROLE_USER_BLOGER') %}
                 <div class="header-right">
                     <div class="search-bar">
-                        <input type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}">
-                        <input type="submit" value="">
+                        <ul class="navig" style="position:absolute; right: 2%">
+                        <li><a href="{{ path('author', {'slug': app.user.username}) }}"> My posts</a></li>
+                            <li><a href="{{ path('post_new') }}"> Create new post </a></li>
+                         </ul>
                     </div>
-                    <ul>
-                        <li><a href="#"><span class="fb"> </span></a></li>
-                        <li><a href="#"><span class="twit"> </span></a></li>
-                        <li><a href="#"><span class="pin"> </span></a></li>
-                        <li><a href="#"><span class="rss"> </span></a></li>
-                        <li><a href="#"><span class="drbl"> </span></a></li>
-                    </ul>
                 </div>
+                {% endif %}
                 <div class="clearfix"></div>
             </div>
         </div>

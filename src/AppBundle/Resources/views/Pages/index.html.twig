@@ -18,10 +18,10 @@
                                 <div class="a-1">
                                     {% for blog in row %}
                                         <div class="col-md-6 abt-left">
-                                            <a href="{{ path('id', {'id': blog.getId }) }}"><img src="{{ asset('images/c-3.jpg') }}" alt="" /></a>
+                                            <a href="{{ path('id', {'id': blog.getId }) }}"><img src="{{ asset(blog.getImage) }}" alt="" style="max-width: 271px; height: 173px"/></a>
                                             <h6>Find The Most</h6>
                                             <h3><a href="{{ path('id', {'id': blog.getId }) }}">{{ blog.title }}</a></h3>
-                                            <p>{{ blog.body[:500] ~ '...' }}</p>
+                                            <p>{{ blog.body[:300] ~ '...' }}</p>
                                                 <label><time datetime="{{ blog.getCreatedAt|date('c') }}">{{ blog.getCreatedAt|date('l, F j, Y') }}</time></label>
                                         </div>
                                     {% endfor %}

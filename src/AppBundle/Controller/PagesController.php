@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 
 class PagesController extends Controller
@@ -21,7 +22,7 @@ class PagesController extends Controller
         $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getAllPosts($thisPage);
         $pagesParameters = $this->get('app.pgManager')->paginate($thisPage, $posts);
 
-        return array('blogs' => $posts, 'slug' => '', 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]);
+        return $this->render('AppBundle:Pages:index.html.twig', array('blogs' => $posts, 'slug' => '', 'maxPages' => $pagesParameters[0], 'thisPage' => $pagesParameters[1]));
     }
 
     /**
@@ -35,5 +36,52 @@ class PagesController extends Controller
         $posts = $this->getDoctrine()->getRepository('AppBundle:Post')->getFiveMostPopular();
 
         return array('items' => $posts);
+    }
+
+    /**
+     * @Route("/login", name="login")
+     * @Method({"GET", "POST"})
+     */
+    public function loginAction(Request $request)
+    {
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('AppBundle:Pages:login.html.twig', array(
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ));
+    }
+
+    /**
+     * Registry.
+     *
+     * @Route("/user/registry", name="registry")
+     * @Method({"GET"})
+     */
+    public function registryAction()
+    {
+        return $this->render('AppBundle:Pages:registry.html.twig');
+    }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logoutAction()
+    {
+        return array('null' => null);
+    }
+    /**
+     * @Route("/admin", name="admin")
+     * @Template()
+     */
+    public function adminAction()
+    {
+        $category = $this->getDoctrine()->getRepository('AppBundle:PostCategory')->findAll();
+
+        return array('category' => $category);
     }
 }

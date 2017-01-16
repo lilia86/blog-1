@@ -12,10 +12,10 @@ class LoadUserInfData extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $inf1 = new UserData();
-        $inf1->setEmail('john@email.com');
+        $inf1->setAddress('john@email.com');
 
         $inf2 = new UserData();
-        $inf2->setEmail('alice@email.com');
+        $inf2->setAddress('alice@email.com');
 
         $manager->persist($inf1);
         $manager->persist($inf2);

@@ -28,13 +28,17 @@
                       </a>
                   </div>
                   <div class="media-body">
-                      <h4 class="media-heading">{{ child_coment.getUser.getNickName }}
+                      <h4 class="media-heading">{{ child_coment.getUser.getUsername }}
+                          {% if is_granted('edit', coment) %}
                           <a href="{{ path('delete_coment', {'id': child_coment.getId }) }}"
                              style="font-size: 10px">  Delete coment</a></h4>
+                          {% endif %}
                       <p>{{ child_coment.getContent }}</p>
                   </div>
               <div  class = "coments" style="font-size:10px;" ><span class = "subcoments" >  Back comments ({{ child_coment.getChildComents|length }})</span>
-                  <span class = "form_sub_coments">  Add subcomments </span>
+                  {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                      <span class = "form_sub_coments">  Add subcomments </span>
+                  {% endif %}
                   <input type="text" class = "coment_id" value="{{ child_coment.getId }}" hidden>
                   <input type="text" class = "post_id" value="{{ blog.getId }}" hidden>
                   <div class="media" style="width: 95%; float: right"></div>

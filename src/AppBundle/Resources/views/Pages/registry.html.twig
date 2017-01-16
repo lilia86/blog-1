@@ -1,0 +1,36 @@
+{% extends 'AppBundle::main.html.twig' %}
+{% block javascript %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $("#sel").click(function(event){
+                var role = $("#sel").val();
+                var $loadContent = $('#form');
+                var routeWithPlaceHolder= "{{ path('user_new', {'slug': '_role_'}) }}";
+                var routetoLoad = routeWithPlaceHolder.replace("_role_",role);
+                $loadContent.load(routetoLoad);
+            });
+
+        });
+
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="single">
+    <div class="container">
+        <div class="comment-bottom heading" style="clear: both">
+
+            <label for="sel">Choose your role</label>
+            <select class="form-control" id="sel">
+                <option value="bloger">Bloger</option>
+                <option value="guest">Guest</option>
+            </select>
+
+            <div id="form">
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

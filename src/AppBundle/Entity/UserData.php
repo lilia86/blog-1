@@ -26,19 +26,6 @@ class UserData
 
     /**
      * @var string
-     * @Assert\Email(
-     *     checkMX = true
-     * )
-     * @Assert\Type("string")
-     * @Assert\Length(
-     *      max = 250
-     * )
-     * @ORM\Column(name="email", type="string", length=250)
-     */
-    private $email;
-
-    /**
-     * @var string
      * @Assert\Type("string")
      * @Assert\Length(
      *      max = 150
@@ -55,30 +42,6 @@ class UserData
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set email.
-     *
-     * @param string $email
-     *
-     * @return UserData
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email.
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
     }
 
     /**

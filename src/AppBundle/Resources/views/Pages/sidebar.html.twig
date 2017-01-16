@@ -5,7 +5,7 @@
         {% for item in items %}
             <div class="might-grid">
                 <div class="grid-might">
-                    <a href="single.html"><img src="{{ asset('images/c-3.jpg') }}" class="img-responsive" alt=""> </a>
+                    <a href="single.html"><img src="{{ asset(item.getImage) }}" class="img-responsive" alt="" style="max-width: 82px; height: 52px"> </a>
                 </div>
                 <div class="might-top">
                     <h4><a href="{{ path('id', {'id': item.getId }) }}">{{ item.title }}</a></h4>

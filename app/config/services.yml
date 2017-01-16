@@ -2,6 +2,7 @@
 # http://symfony.com/doc/current/service_container.html
 parameters:
     app.pgManager.limit : 3
+    img_upload_directory : %kernel.root_dir%/../web/images
 
 services:
      app.dbManager:
@@ -15,3 +16,19 @@ services:
             public: false
             tags:
                 - { name: twig.extension }
+     app.user_voter:
+             class: AppBundle\Security\UserVoter
+             arguments: ['@security.access.decision_manager']
+             tags:
+                 - { name: security.voter }
+             public: false
+     app.file_uploader:
+             class: AppBundle\Services\FileUploadManager
+             arguments: ['%img_upload_directory%']
+     app.doctrine_img_listener:
+             class: AppBundle\EventListener\ImgUploadListener
+             arguments: ['@app.file_uploader']
+             tags:
+                  - { name: doctrine.event_listener, event: prePersist }
+                  - { name: doctrine.event_listener, event: preUpdate }
+                  - { name: doctrine.event_listener, event: postLoad }

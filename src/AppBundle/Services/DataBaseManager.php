@@ -16,7 +16,7 @@ class DataBaseManager
         $this->em = $em;
     }
 
-    public function save($object, User $user, Post $post, Coment $coment = null)
+    public function save($object, User $user = null, Post $post = null, Coment $coment = null)
     {
         if ($object instanceof Post) {
             $object->setUser($user);
@@ -27,9 +27,9 @@ class DataBaseManager
         }
         if ($object instanceof Coment) {
             $object->setUser($user);
-            if($coment !== null) {
+            if ($coment !== null) {
                 $object->setParentComent($coment);
-            }else{
+            } else {
                 $object->setPost($post);
             }
         }

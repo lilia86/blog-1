@@ -31,6 +31,7 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
           simple and easy to distinguish');
         $post1->setUser($this->getReference('bloger1'));
         $post1->setCategory($this->getReference('buying'));
+        $post1->setImage('c-3.jpg');
         $post1->addTag($this->getReference('arab'));
         $post1->addTag($this->getReference('robu'));
 
@@ -54,6 +55,7 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
           simple and easy to distinguish');
         $post2->setUser($this->getReference('bloger2'));
         $post2->setCategory($this->getReference('cooking'));
+        $post2->setImage('c-4.jpg');
         $post2->addTag($this->getReference('libe'));
 
         $post3 = new Post();
@@ -76,9 +78,9 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
           simple and easy to distinguish');
         $post3->setUser($this->getReference('bloger1'));
         $post3->setCategory($this->getReference('hystory'));
+        $post3->setImage('c-5.jpg');
         $post3->addTag($this->getReference('arab'));
         $post3->addTag($this->getReference('robu'));
-        $post3->addTag($this->getReference('libe'));
 
         $post4 = new Post();
         $post4->setTitle('Some historical facts');
@@ -86,9 +88,9 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
          velit justo, in ven e natis purus pretium sit amet. Praesent lectus tortor, tincidu nt in consectetur 
          vestibulum, ultrices nec neque. Praesent nec sagittis mauris. Fusce convallis nunc neque. Integer 
          egestas aliquam interdum. ');
-        $post4->setUser($this->getReference('bloger1'));
-        $post4->setCategory($this->getReference('hystory'));
-        $post4->addTag($this->getReference('arab'));
+        $post4->setUser($this->getReference('bloger2'));
+        $post4->setCategory($this->getReference('cooking'));
+        $post4->setImage('c-6.jpg');
         $post4->addTag($this->getReference('robu'));
         $post4->addTag($this->getReference('libe'));
 
@@ -100,8 +102,8 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
          egestas aliquam interdum. ');
         $post5->setUser($this->getReference('bloger1'));
         $post5->setCategory($this->getReference('hystory'));
+        $post5->setImage('c-7.jpg');
         $post5->addTag($this->getReference('arab'));
-        $post5->addTag($this->getReference('robu'));
         $post5->addTag($this->getReference('libe'));
 
         $post6 = new Post();
@@ -110,8 +112,9 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
          velit justo, in ven e natis purus pretium sit amet. Praesent lectus tortor, tincidu nt in consectetur 
          vestibulum, ultrices nec neque. Praesent nec sagittis mauris. Fusce convallis nunc neque. Integer 
          egestas aliquam interdum. ');
-        $post6->setUser($this->getReference('bloger1'));
-        $post6->setCategory($this->getReference('hystory'));
+        $post6->setUser($this->getReference('bloger2'));
+        $post6->setCategory($this->getReference('buying'));
+        $post6->setImage('c-8.jpg');
         $post6->addTag($this->getReference('arab'));
         $post6->addTag($this->getReference('robu'));
         $post6->addTag($this->getReference('libe'));

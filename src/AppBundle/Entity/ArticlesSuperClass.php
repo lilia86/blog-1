@@ -21,7 +21,7 @@ abstract class ArticlesSuperClass
      * @var string
      * @Assert\Type("string")
      * @Assert\Length(
-     *      max = 150
+     *      max = 2000
      * )
      * @Assert\NotBlank()
      * @ORM\Column(name="title", type="string", length=150)
@@ -33,7 +33,7 @@ abstract class ArticlesSuperClass
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Assert\Length(
-     *      max = 150
+     *      max = 2000
      * )
      * @ORM\Column(name="body", type="text")
      */
@@ -41,12 +41,8 @@ abstract class ArticlesSuperClass
 
     /**
      * @var string
-     * @Assert\Image(
-     *     minWidth = 200,
-     *     minHeight = 200
-     *
-     * )
-     * @ORM\Column(name="file", type="blob", nullable=true)
+     * @Assert\Image()
+     * @ORM\Column(name="image", type="string")
      */
     private $image;
 
