@@ -3,6 +3,13 @@
 {% block stylesheets %}
     <link href="{{ asset('css/bootstrap.css') }}" rel='stylesheet' type='text/css' />
     <link href="{{ asset('css/style.css') }}" rel='stylesheet' type='text/css' />
+    <style>
+        .menu_item{
+            width: 20%;
+            float:left;
+            margin-left: 30px;
+        }
+    </style>
 {% endblock %}
 
 {% block javascript %}
@@ -15,14 +22,23 @@
                 event.preventDefault();
                 $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
             });
-            $("#sel_cat").click(function(event){
-                var id = $("#sel_cat").val();
-                var routeWithPlaceHolderCat= "{{ path('category_update', {'id': '_id_'}) }}";
-                var routetoLoadCat = routeWithPlaceHolderCat.replace("_id_",id);
-                $('#cat_update').html("<a href='" + routetoLoadCat + "'>Update</a>");
-                var routeWithPlaceHolderDel= "{{ path('delete_category', {'id': '_id_'}) }}";
+            $(".form-control").click(function(event){
+                var id = $(this).val();
+                var rout = $(this).parent(".menu_item").find(".rout").val();
+                if (rout == 'category') {
+                    var routeWithPlaceHolderUp= "{{ path('category_update', {'id': '_id_'}) }}";
+                    var routeWithPlaceHolderDel= "{{ path('delete_category', {'id': '_id_'}) }}";
+                }
+                else if(rout == 'tag'){
+                    var routeWithPlaceHolderUp= "{{ path('tag_update', {'id': '_id_'}) }}";
+                    var routeWithPlaceHolderDel= "{{ path('delete_tag', {'id': '_id_'}) }}";
+                }
+                var routetoLoad = routeWithPlaceHolderUp.replace("_id_",id);
+                var update = $(this).parent(".menu_item").find(".update");
+                $(update).html("<a href='" + routetoLoad + "'>Update</a>");
                 var routetoLoadDel = routeWithPlaceHolderDel.replace("_id_",id);
-                $('#cat_delete').html("<a href='" + routetoLoadDel + "'>Update</a>");
+                var delet = $(this).parent(".menu_item").find(".delete");
+                $(delet).html("<a href='" + routetoLoadDel + "'>Delete</a>");
 
             });
             $("span.menu").click(function(){
@@ -72,18 +88,49 @@
     <!--about-starts-->
     <div class="about">
         <div class="container">
-            <div style="width: 20%">
-            <label for="sel_cat">Category</label>
-            <select class="form-control" id="sel_cat">
+            <div class="menu_item">
+                <label for="sel">Post</label>
+                <select class="form-control" id="sel">
+                    {% for item in post %}
+                        <option value="{{ item.getId }}">{{ item.getTitle }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" class = "rout" value="post" hidden>
+
+                <ul>
+                    <li class="update"><a href="{{ path('update_post', {'id': 1}) }}">Update</a></li>
+                    <li class="delete"><a href="{{ path('delete_post', {'id': 1}) }}">Delete</a></li>
+                </ul>
+            </div>
+            <div class="menu_item">
+            <label for="sel">Category</label>
+            <select class="form-control" id="sel">
                 {% for item in category %}
                 <option value="{{ item.getId }}">{{ item.getDescription }}</option>
                 {% endfor %}
             </select>
+            <input type="text" class = "rout" value="category" hidden>
+
             <ul>
                 <li><a href='{{ path("category_new") }}'>Create</a></li>
-                <li><a href="{{ path('category_update', {'id': 1}) }}" id="cat_update">Update</a></li>
-                <li><a href="{{ path('delete_category', {'id': 1}) }}" id="cat_delete">Delete</a></li>
+                <li class="update"><a href="{{ path('category_update', {'id': 1}) }}">Update</a></li>
+                <li class="delete"><a href="{{ path('delete_category', {'id': 1}) }}">Delete</a></li>
             </ul>
+            </div>
+            <div class="menu_item">
+                <label for="sel">Tag</label>
+                <select class="form-control" id="sel">
+                    {% for item in tag %}
+                        <option value="{{ item.getId }}">{{ item.getName }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" class = "rout" value="tag" hidden>
+
+                <ul>
+                    <li><a href='{{ path("category_new") }}'>Create</a></li>
+                    <li class="update"><a href="{{ path('tag_update', {'id': 1}) }}">Update</a></li>
+                    <li class="delete"><a href="{{ path('delete_tag', {'id': 1}) }}">Delete</a></li>
+                </ul>
             </div>
         </div>
     </div>

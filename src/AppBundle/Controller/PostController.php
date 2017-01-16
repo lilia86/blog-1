@@ -52,7 +52,8 @@ class PostController extends Controller
      */
     public function updatePostAction(Request $request, Post $post)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('edit', $post)) {
+        if (!($this->get('security.authorization_checker')->isGranted('edit', $post) ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(PostType::class, $post);
@@ -73,18 +74,28 @@ class PostController extends Controller
      * Delete post.
      *
      * @Route("/post/delete/{id}", name="delete_post")
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @ParamConverter("post", class="AppBundle:Post")
      */
     public function deletePostAction(Request $request, Post $post)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('edit', $post)) {
+        if (!($this->get('security.authorization_checker')->isGranted('edit', $post) ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
 
-        $this->get('app.dbManager')->delete($post);
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
 
-        return $this->redirectToRoute('homepage');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.dbManager')->update($post);
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('AppBundle:Pages:form.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
