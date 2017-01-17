@@ -26,8 +26,8 @@ services:
              class: AppBundle\Services\FileUploadManager
              arguments: ['%img_upload_directory%']
      app.doctrine_img_listener:
-             class: AppBundle\EventListener\ImgUploadListener
-             arguments: ['@app.file_uploader']
+             class: AppBundle\EventListener\DataBaseListener
+             arguments: ['@app.file_uploader', '@security.password_encoder']
              tags:
                   - { name: doctrine.event_listener, event: prePersist }
                   - { name: doctrine.event_listener, event: preUpdate }

@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use AppBundle\Entity\UserBloger;
 use AppBundle\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -33,11 +34,12 @@ class UserType extends AbstractType
                 'label' => 'Last Name',
 
             ])
-            ->add('password', PasswordType::class, [
-                'required' => true,
-                'label' => 'password',
-
-            ])
+            ->add('password', RepeatedType::class, [
+                   'type' => PasswordType::class,
+                   'required' => true,
+                   'first_options' => ['label' => 'Password*'],
+                   'second_options' => ['label' => 'Repeat Password*'],
+                           ])
             ->add('email', EmailType::class, [
                 'required' => true,
                 'label' => 'Email',
