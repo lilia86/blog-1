@@ -24,7 +24,7 @@ class PostController extends Controller
          */
         public function newPostAction(Request $request)
         {
-            if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER_BLOGER')) {
+            if (!$this->isGranted('ROLE_USER_BLOGER')) {
                 throw $this->createAccessDeniedException();
             }
             $post = new Post();
@@ -53,7 +53,7 @@ class PostController extends Controller
     public function updatePostAction(Request $request, Post $post)
     {
         if (!($this->get('security.authorization_checker')->isGranted('edit', $post) ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            $this->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(PostType::class, $post);
@@ -80,7 +80,7 @@ class PostController extends Controller
     public function deletePostAction(Request $request, Post $post)
     {
         if (!($this->get('security.authorization_checker')->isGranted('edit', $post) ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            $this->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
 

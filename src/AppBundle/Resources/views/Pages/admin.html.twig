@@ -26,8 +26,8 @@
                 var id = $(this).val();
                 var rout = $(this).parent(".menu_item").find(".rout").val();
                 if (rout == 'user') {
-                    var routeWithPlaceHolderUp= "{{ path('user_update', {'id': '_id_'}) }}";
                     var routeWithPlaceHolderDel= "{{ path('delete_user', {'id': '_id_'}) }}";
+                    var routeWithPlaceHolderLock= "{{ path('user_update_byadmin', {'id': '_id_'}) }}";
                 }
                 if (rout == 'post') {
                     var routeWithPlaceHolderUp= "{{ path('update_post', {'id': '_id_'}) }}";
@@ -47,6 +47,9 @@
                 var routetoLoadDel = routeWithPlaceHolderDel.replace("_id_",id);
                 var delet = $(this).parent(".menu_item").find(".delete");
                 $(delet).html("<a href='" + routetoLoadDel + "'>Delete</a>");
+                var routetoLoadLock = routeWithPlaceHolderLock.replace("_id_",id);
+                var lock = $(this).parent(".menu_item").find(".lock");
+                $(lock).html("<a href='" + routetoLoadLock + "'>Change status</a>");
 
             });
             $("span.menu").click(function(){
@@ -106,8 +109,8 @@
                 <input type="text" class = "rout" value="user" hidden>
 
                 <ul>
-                    <li class="update"><a href="{{ path('user_update', {'id': 1}) }}">Update</a></li>
                     <li class="delete"><a href="{{ path('delete_user', {'id': 1}) }}">Delete</a></li>
+                    <li class="lock"><a href="{{ path('user_update_byadmin', {'id': 1}) }}">Change status</a></li>
                 </ul>
             </div>
             <div class="menu_item">

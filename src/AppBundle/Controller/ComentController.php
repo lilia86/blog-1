@@ -52,7 +52,7 @@ class ComentController extends Controller
     public function updateComentAction(Request $request, Coment $coment)
     {
         if (!($this->get('security.authorization_checker')->isGranted('edit', $coment) ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            $this->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(ComentType::class, $coment);
@@ -79,7 +79,7 @@ class ComentController extends Controller
     public function deleteComentAction(Request $request, Coment $coment)
     {
         if (!($this->get('security.authorization_checker')->isGranted('edit', $coment) ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            $this->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
         $this->get('app.dbManager')->delete($coment);

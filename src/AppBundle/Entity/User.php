@@ -184,6 +184,12 @@ abstract class User implements AdvancedUserInterface, \Serializable
         return true;
     }
 
+    public function setIsEnabled($status)
+    {
+        $this->isActive = $status;
+        return $this;
+    }
+
     public function isEnabled()
     {
         return $this->isActive;

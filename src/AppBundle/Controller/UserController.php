@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use AppBundle\Entity\UserBloger;
 use AppBundle\Entity\UserGuest;
 use AppBundle\Form\UserType;
+use AppBundle\Form\UserForAdminType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -55,8 +56,7 @@ class UserController extends Controller
      */
     public function updateUserAction(Request $request, User $user)
     {
-        if (!($this->getUser() == $user ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+        if ($this->getUser() !== $user) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(UserType::class, $user);
@@ -74,6 +74,37 @@ class UserController extends Controller
     }
 
     /**
+     * Update a user entity by admin.
+     *
+     * @Route("/user/update_by_admin/{id}", name="user_update_byadmin")
+     * @Method({"GET", "POST"})
+     * @ParamConverter("user", class="AppBundle:User")
+     */
+    public function updateUserByAdminAction(Request $request, User $user)
+    {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+        if($user->isEnabled()){
+            $user->setIsEnabled(false);
+        }else{
+            $user->setIsEnabled(true);
+        }
+        $form = $this->createForm(UserForAdminType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.dbManager')->update();
+
+            return $this->redirectToRoute('admin');
+        }
+
+        return $this->render('AppBundle:Pages:form.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
      * Delete user.
      *
      * @Route("/user/delete/{id}", name="delete_user")
@@ -82,8 +113,8 @@ class UserController extends Controller
      */
     public function deleteUserAction(Request $request, User $user)
     {
-        if (!($this->getUser() == $user ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+        if (($this->getUser() !== $user) ||
+            $this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(UserType::class, $user);

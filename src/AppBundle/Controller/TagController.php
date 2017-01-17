@@ -20,7 +20,7 @@ class TagController extends Controller
      */
     public function newTagAction(Request $request)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
         $tag = new PostTag();
@@ -47,7 +47,7 @@ class TagController extends Controller
      */
     public function updateUserAction(Request $request, PostTag $tag)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(PostTagType::class, $tag);
@@ -73,7 +73,7 @@ class TagController extends Controller
      */
     public function deleteUserAction(Request $request, PostTag $tag)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(PostTagType::class, $tag);

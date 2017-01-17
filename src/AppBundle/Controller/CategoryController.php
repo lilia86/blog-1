@@ -20,7 +20,7 @@ class CategoryController extends Controller
      */
     public function newCategoryAction(Request $request)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
         $category = new PostCategory();
@@ -47,7 +47,7 @@ class CategoryController extends Controller
      */
     public function updateUserAction(Request $request, PostCategory $category)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(PostCategoryType::class, $category);
@@ -73,7 +73,7 @@ class CategoryController extends Controller
      */
     public function deleteUserAction(Request $request, PostCategory $category)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
         $form = $this->createForm(PostCategoryType::class, $category);
