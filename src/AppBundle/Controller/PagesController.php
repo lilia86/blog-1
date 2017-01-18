@@ -78,8 +78,21 @@ class PagesController extends Controller
      * @Route("/admin", name="admin")
      * @Template()
      */
-    public function adminAction()
+    public function adminAction(Request $request)
     {
+        if ($request->isXmlHttpRequest()) {
+            $entity = $request->request->get('entity');
+            $id = $request->request->get('id');
+            $post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id);
+            $status = $post->getIsPublished();
+            if($status){
+                $post->setIsPublished(false);
+            }else{
+                $post->setIsPublished(true);
+            }
+
+            return $this->json(array('status' => $status));
+        }
         $user = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
         $post = $this->getDoctrine()->getRepository('AppBundle:Post')->findAll();
         $category = $this->getDoctrine()->getRepository('AppBundle:PostCategory')->findAll();

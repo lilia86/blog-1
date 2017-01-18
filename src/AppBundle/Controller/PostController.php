@@ -75,6 +75,38 @@ class PostController extends Controller
             'form' => $form->createView(),
         ));
     }
+    /**
+     * Change post status.
+     *
+     * @Route("/change_status_post/{id}", name="change_status_post")
+     * @Method({"GET", "POST"})
+     * @ParamConverter("post", class="AppBundle:Post")
+     */
+    public function updateUserByAdminAction(Request $request, Post $post)
+    {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($post->getIsPublished()){
+                $post->setIsPublished(false);
+            }else{
+                $post->setIsPublished(true);
+            }
+            $this->get('app.dbManager')->update();
+
+            return $this->redirectToRoute('admin');
+        }
+
+        return $this->render('AppBundle:Pages:form.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
 
     /**
      * Delete post.

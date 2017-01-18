@@ -18,6 +18,8 @@ class PostRepository extends EntityRepository
     public function getAllPosts($currentPage = 1)
     {
         $query = $this->createQueryBuilder('p')
+            ->where('p.isPublished = :public')
+            ->setParameter('public', 1)
             ->orderBy('p.id', 'DESC')
             ->getQuery();
 

@@ -36,9 +36,24 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->get('app.dbManager')->save($user);
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->get('security.token_storage')->setToken($token);
+            /*$email = $user->getEmail();
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Hello Email')
+                ->setFrom('lbondarec@codenvy.com')
+                ->setTo($email)
+                ->setBody(
+                    $this->renderView(
+                        'AppBundle:Pages:mail.html.twig'
+                    ),
+                    'text/html'
+                )
+            ;
+            $this->get('mailer')->send($message);*/
+
             $this->get('session')->set('_security_main', serialize($token));
 
             return $this->redirectToRoute('homepage');
@@ -87,15 +102,16 @@ class UserController extends Controller
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
-        if($user->isEnabled()){
-            $user->setIsEnabled(false);
-        }else{
-            $user->setIsEnabled(true);
-        }
+
         $form = $this->createForm(UserForAdminType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($user->isEnabled()){
+                $user->setIsEnabled(false);
+            }else{
+                $user->setIsEnabled(true);
+            }
             $this->get('app.dbManager')->update();
 
             return $this->redirectToRoute('admin');
