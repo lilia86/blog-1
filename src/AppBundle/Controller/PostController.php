@@ -58,13 +58,14 @@ class PostController extends Controller
             throw $this->createAccessDeniedException();
         }
         $image = $post->getImage();
+
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if($post->getImage() == null){
-                $fileName = $this->get('app.file_uploader')->update($image);
-                $post->setImage($fileName);
+                $post->setImage($image);
+
             }
             $this->get('app.dbManager')->update();
 
@@ -87,7 +88,7 @@ class PostController extends Controller
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
-
+        $image = $post->getImage();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -96,6 +97,10 @@ class PostController extends Controller
                 $post->setIsPublished(false);
             }else{
                 $post->setIsPublished(true);
+            }
+            if($post->getImage() == null){
+                $post->setImage($image);
+
             }
             $this->get('app.dbManager')->update();
 

@@ -76,7 +76,7 @@ class DataBaseSubscriber implements EventSubscriber
     {
         $file = $entity->getImage();
 
-        if (!$file instanceof UploadedFile) {
+        if (!($file instanceof UploadedFile || $file instanceof File )) {
             $entity->setImage('c-3.jpg');
         }else{
             $fileName = $this->uploader->upload($file);

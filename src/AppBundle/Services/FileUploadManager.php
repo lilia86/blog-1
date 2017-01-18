@@ -14,7 +14,7 @@ class FileUploadManager
         $this->targetDir = $targetDir;
     }
 
-    public function upload(UploadedFile $file)
+    public function upload($file)
     {
         $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
