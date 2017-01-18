@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class CategoryController extends Controller
 {
@@ -17,12 +18,11 @@ class CategoryController extends Controller
      *
      * @Route("/category/create/", name="category_new")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function newCategoryAction(Request $request)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
+
         $category = new PostCategory();
         $form = $this->createForm(PostCategoryType::class, $category);
         $form->handleRequest($request);
@@ -44,12 +44,10 @@ class CategoryController extends Controller
      * @Route("/category/update/{id}", name="category_update")
      * @Method({"GET", "POST"})
      * @ParamConverter("category", class="AppBundle:PostCategory")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function updateUserAction(Request $request, PostCategory $category)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(PostCategoryType::class, $category);
         $form->handleRequest($request);
 
@@ -70,12 +68,10 @@ class CategoryController extends Controller
      * @Route("/category/delete/{id}", name="delete_category")
      * @Method({"GET", "POST"})
      * @ParamConverter("category", class="AppBundle:PostCategory")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteUserAction(Request $request, PostCategory $category)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(PostCategoryType::class, $category);
         $form->handleRequest($request);
 

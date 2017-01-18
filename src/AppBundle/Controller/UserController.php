@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
 class UserController extends Controller
@@ -40,19 +40,6 @@ class UserController extends Controller
             $this->get('app.dbManager')->save($user);
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->get('security.token_storage')->setToken($token);
-            /*$email = $user->getEmail();
-            $message = \Swift_Message::newInstance()
-                ->setSubject('Hello Email')
-                ->setFrom('lbondarec@codenvy.com')
-                ->setTo($email)
-                ->setBody(
-                    $this->renderView(
-                        'AppBundle:Pages:mail.html.twig'
-                    ),
-                    'text/html'
-                )
-            ;
-            $this->get('mailer')->send($message);*/
 
             $this->get('session')->set('_security_main', serialize($token));
 
@@ -96,13 +83,10 @@ class UserController extends Controller
      * @Route("/user/update_by_admin/{id}", name="user_update_byadmin")
      * @Method({"GET", "POST"})
      * @ParamConverter("user", class="AppBundle:User")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function updateUserByAdminAction(Request $request, User $user)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
-
         $form = $this->createForm(UserForAdminType::class, $user);
         $form->handleRequest($request);
 

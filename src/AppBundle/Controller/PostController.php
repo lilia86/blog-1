@@ -50,13 +50,11 @@ class PostController extends Controller
      * @Route("/post/update/{id}", name="update_post")
      * @Method({"GET", "POST"})
      * @ParamConverter("post", class="AppBundle:Post")
+     * @Security("is_granted('edit', post) or has_role('ROLE_ADMIN')")
      */
     public function updatePostAction(Request $request, Post $post)
     {
-        if (!($this->get('security.authorization_checker')->isGranted('edit', $post) ||
-            $this->isGranted('ROLE_ADMIN'))) {
-            throw $this->createAccessDeniedException();
-        }
+
         $image = $post->getImage();
 
         $form = $this->createForm(PostType::class, $post);
@@ -82,12 +80,10 @@ class PostController extends Controller
      * @Route("/change_status_post/{id}", name="change_status_post")
      * @Method({"GET", "POST"})
      * @ParamConverter("post", class="AppBundle:Post")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function updateUserByAdminAction(Request $request, Post $post)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
         $image = $post->getImage();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -119,14 +115,10 @@ class PostController extends Controller
      * @Route("/post/delete/{id}", name="delete_post")
      * @Method({"GET", "POST"})
      * @ParamConverter("post", class="AppBundle:Post")
+     * @Security("is_granted('edit', post) or has_role('ROLE_ADMIN')")
      */
     public function deletePostAction(Request $request, Post $post)
     {
-        if (!($this->get('security.authorization_checker')->isGranted('edit', $post) ||
-            $this->isGranted('ROLE_ADMIN'))) {
-            throw $this->createAccessDeniedException();
-        }
-
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 

@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class ComentController extends Controller
 {
@@ -48,13 +49,11 @@ class ComentController extends Controller
      * @Route("/coment/update/{id}", name="update_coment")
      * @Method({"GET", "POST"})
      * @ParamConverter("coment", class="AppBundle:Coment")
+     * @Security("is_granted('edit', coment) or has_role('ROLE_ADMIN')")
      */
     public function updateComentAction(Request $request, Coment $coment)
     {
-        if (!($this->get('security.authorization_checker')->isGranted('edit', $coment) ||
-            $this->isGranted('ROLE_ADMIN'))) {
-            throw $this->createAccessDeniedException();
-        }
+
         $form = $this->createForm(ComentType::class, $coment);
         $form->handleRequest($request);
 
@@ -75,13 +74,11 @@ class ComentController extends Controller
      * @Route("/coment/delete/{id}", name="delete_coment")
      * @Method({"GET", "POST"})
      * @ParamConverter("coment", class="AppBundle:Coment")
+     * @Security("is_granted('edit', coment) or has_role('ROLE_ADMIN')")
      */
     public function deleteComentAction(Request $request, Coment $coment)
     {
-        if (!($this->get('security.authorization_checker')->isGranted('edit', $coment) ||
-            $this->isGranted('ROLE_ADMIN'))) {
-            throw $this->createAccessDeniedException();
-        }
+
         $this->get('app.dbManager')->delete($coment);
 
         $form = $this->createForm(ComentType::class, $coment);

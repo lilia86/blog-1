@@ -17,12 +17,10 @@ class TagController extends Controller
      *
      * @Route("/tag/create/", name="tag_new")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function newTagAction(Request $request)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
         $tag = new PostTag();
         $form = $this->createForm(PostTagType::class, $tag);
         $form->handleRequest($request);
@@ -44,12 +42,10 @@ class TagController extends Controller
      * @Route("/tag/update/{id}", name="tag_update")
      * @Method({"GET", "POST"})
      * @ParamConverter("tag", class="AppBundle:PostTag")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function updateUserAction(Request $request, PostTag $tag)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(PostTagType::class, $tag);
         $form->handleRequest($request);
 
@@ -70,12 +66,10 @@ class TagController extends Controller
      * @Route("/tag/delete/{id}", name="delete_tag")
      * @Method({"GET", "POST"})
      * @ParamConverter("tag", class="AppBundle:PostTag")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteUserAction(Request $request, PostTag $tag)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(PostTagType::class, $tag);
         $form->handleRequest($request);
 
