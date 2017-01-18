@@ -37,8 +37,8 @@ class PostType extends AbstractType
                 'attr' => ['class' => 'test col-xs-6'],
             ])
             ->add('image', FileType::class, [
-                'required' => true,
                 'label' => 'Image',
+                'required' => false,
                 'attr' => ['class' => 'test col-xs-6'],
             ])
             ->add('category', EntityType::class, array(

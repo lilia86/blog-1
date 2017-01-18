@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
+
 class PostController extends Controller
 {
     /**
@@ -56,15 +57,20 @@ class PostController extends Controller
             $this->isGranted('ROLE_ADMIN'))) {
             throw $this->createAccessDeniedException();
         }
+        $image = $post->getImage();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($post->getImage() == null){
+                $fileName = $this->get('app.file_uploader')->update($image);
+                $post->setImage($fileName);
+            }
             $this->get('app.dbManager')->update();
 
             return $this->redirectToRoute('homepage');
         }
-
+        dump($image);
         return $this->render('AppBundle:Pages:form.html.twig', array(
             'form' => $form->createView(),
         ));
@@ -88,7 +94,7 @@ class PostController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.dbManager')->update($post);
+            $this->get('app.dbManager')->delete($post);
 
             return $this->redirectToRoute('homepage');
         }

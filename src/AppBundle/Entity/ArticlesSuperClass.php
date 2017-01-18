@@ -42,9 +42,19 @@ abstract class ArticlesSuperClass
     /**
      * @var string
      * @Assert\Image()
-     * @ORM\Column(name="image", type="string")
+     * @ORM\Column(name="image", type="string", nullable=true)
      */
     private $image;
+
+    /**
+     * @ORM\Column(name="is_published", type="boolean", nullable=true)
+     */
+    private $isPublished;
+
+    public function __construct()
+    {
+        $this->isPublished = false;
+    }
 
     /**
      * Get id.
@@ -126,5 +136,16 @@ abstract class ArticlesSuperClass
     public function getImage()
     {
         return $this->image;
+    }
+
+    public function setIsPublished($status)
+    {
+        $this->isPublished = $status;
+        return $this;
+    }
+
+    public function getIsPublished()
+    {
+        return $this->isPublished;
     }
 }

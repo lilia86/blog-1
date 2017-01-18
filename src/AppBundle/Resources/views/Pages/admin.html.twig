@@ -4,10 +4,36 @@
     <link href="{{ asset('css/bootstrap.css') }}" rel='stylesheet' type='text/css' />
     <link href="{{ asset('css/style.css') }}" rel='stylesheet' type='text/css' />
     <style>
+
         .menu_item{
-            width: 20%;
-            float:left;
-            margin-left: 30px;
+            clear: both;
+            margin: 30px;
+        }
+        .menu_item table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .menu_item ul{
+            margin: 5px 15px;
+        }
+        .menu_item ul li{
+            display: inline;
+            padding: 15px;
+        }
+        .form-control{
+            width: 10%;
+            float: left;
+
         }
     </style>
 {% endblock %}
@@ -100,35 +126,61 @@
     <div class="about">
         <div class="container">
             <div class="menu_item">
-                <label for="sel">User</label>
-                <select class="form-control" id="sel">
+                <p>User</p>
+                <table>
+                    <tr>
+                       <th>Username</th>
+                       <th>Email</th>
+                       <th>Status</th>
+                        <th>Delete user</th>
+                        <th>Change status</th>
+                    </tr>
                     {% for item in user %}
-                        <option value="{{ item.getId }}">{{ item.getUsername }}</option>
-                    {% endfor %}
-                </select>
-                <input type="text" class = "rout" value="user" hidden>
-
-                <ul>
-                    <li class="delete"><a href="{{ path('delete_user', {'id': 1}) }}">Delete</a></li>
-                    <li class="lock"><a href="{{ path('user_update_byadmin', {'id': 1}) }}">Change status</a></li>
-                </ul>
+                     <tr>
+                        <td>{{ item.getUsername }}</td>
+                         <td>{{ item.getEmail }}</td>
+                          {% if item.isEnabled %}
+                          <td>Active</td>
+                          {% else %}
+                          <td>Not active</td>
+                          {% endif %}
+                         <td class="delete"><a href="{{ path('delete_user', {'id': item.getId}) }}">Delete</a></td>
+                         <td class="lock"><a href="{{ path('user_update_byadmin', {'id': item.getId}) }}">Change status</a></td>
+                      </tr>
+                      {% endfor %}
+                </table>
             </div>
             <div class="menu_item">
-                <label for="sel">Post</label>
-                <select class="form-control" id="sel">
+                <p>Post</p>
+                <table>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Author</th>
+                        <th>Published</th>
+                        <th>View</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
                     {% for item in post %}
-                        <option value="{{ item.getId }}">{{ item.getTitle }}</option>
+                        <tr>
+                            <td>{{ item.getTitle }}</td>
+                            <td>{{ item.getCategory.getDescription }}</td>
+                            <td>{{ item.getUser.getUsername }}</td>
+                            {% if item.isPublished %}
+                                <td>Published</td>
+                            {% else %}
+                                <td>Not published</td>
+                            {% endif %}
+                            <td><a href="{{ path('id', {'id': item.getId}) }}">View</a></td>
+                            <td class="update"><a href="{{ path('update_post', {'id': item.getId}) }}">Update</a></td>
+                            <td class="delete"><a href="{{ path('delete_post', {'id': item.getId}) }}">Delete</a></td>
+                        </tr>
                     {% endfor %}
-                </select>
-                <input type="text" class = "rout" value="post" hidden>
-
-                <ul>
-                    <li class="update"><a href="{{ path('update_post', {'id': 1}) }}">Update</a></li>
-                    <li class="delete"><a href="{{ path('delete_post', {'id': 1}) }}">Delete</a></li>
-                </ul>
+                </table>
             </div>
             <div class="menu_item">
-            <label for="sel">Category</label>
+            <p>Category</p>
             <select class="form-control" id="sel">
                 {% for item in category %}
                 <option value="{{ item.getId }}">{{ item.getDescription }}</option>
@@ -143,7 +195,7 @@
             </ul>
             </div>
             <div class="menu_item">
-                <label for="sel">Tag</label>
+                <p>Tag</p>
                 <select class="form-control" id="sel">
                     {% for item in tag %}
                         <option value="{{ item.getId }}">{{ item.getName }}</option>

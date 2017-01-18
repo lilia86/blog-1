@@ -5,13 +5,14 @@ namespace AppBundle\EventListener;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\Common\EventSubscriber;
 use AppBundle\Entity\Post;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\File\File;
 use AppBundle\Services\FileUploadManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
-class ImgUploadListener
+class DataBaseSubscriber implements EventSubscriber
 {
     private $uploader;
     private $encoder;
@@ -20,6 +21,15 @@ class ImgUploadListener
     {
         $this->uploader = $uploader;
         $this->encoder = $encoder;
+    }
+
+    public function getSubscribedEvents()
+    {
+        return array(
+            'prePersist',
+            'preUpdate',
+            'postLoad',
+        );
     }
 
     public function prePersist(LifecycleEventArgs $args)
@@ -67,12 +77,15 @@ class ImgUploadListener
         $file = $entity->getImage();
 
         if (!$file instanceof UploadedFile) {
-            return;
+            $entity->setImage('c-3.jpg');
+        }else{
+            $fileName = $this->uploader->upload($file);
+            $entity->setImage($fileName);
         }
 
-        $fileName = $this->uploader->upload($file);
-        $entity->setImage($fileName);
+
     }
+
 
     private function encodePassword($entity)
     {

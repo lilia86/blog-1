@@ -3,6 +3,7 @@
 namespace AppBundle\Services;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 class FileUploadManager
 {
@@ -21,4 +22,6 @@ class FileUploadManager
 
         return $fileName;
     }
+
+
 }
