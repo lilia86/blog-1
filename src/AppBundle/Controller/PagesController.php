@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PagesController extends Controller
 {
@@ -98,5 +99,30 @@ class PagesController extends Controller
         $category = $this->getDoctrine()->getRepository('AppBundle:PostCategory')->findAll();
         $tag = $this->getDoctrine()->getRepository('AppBundle:PostTag')->findAll();
         return array('user' => $user, 'post' => $post, 'tag' => $tag, 'category' => $category);
+    }
+
+    /**
+
+     * @param Request $request
+     * @Route("/test", name="test")
+     *
+     * @return JsonResponse
+     */
+    public function testAction(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+
+
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Post');
+
+        $posts = $repo->createQueryBuilder('q')
+            ->getQuery()
+            ->getArrayResult();
+
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Coment');
+
+
+
+        return $this->json(['post' => $posts]);
     }
 }

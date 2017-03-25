@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="coment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ComentRepository")
  */
-class Coment
+class Coment implements \Serializable
 {
     use Timestampable;
     /**
@@ -173,5 +173,27 @@ class Coment
     public function getChildComents()
     {
         return $this->child_coments;
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->post,
+            $this->user,
+            $this->content,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->post,
+            $this->user,
+            $this->content
+            ) = unserialize($serialized);
     }
 }
